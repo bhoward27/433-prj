@@ -6,11 +6,12 @@ CC_C = $(CROSS_COMPILE)g++
 STD = -std=c++17
 WFLAGS = -Wall -Werror
 OPT = -g
+CPP_FILES = main.cpp adc.cpp utils.cpp
 
 all: a.out
 
-a.out: main.cpp
-	$(CC_C) $(WFLAGS) $(OPT) main.cpp -o $(OUT_DIR)/a.out
+a.out: $(CPP_FILES)
+	$(CC_C) $(WFLAGS) $(OPT) $(CPP_FILES) -o $(OUT_DIR)/a.out
 
 clean:
 	rm -f $(OUT_DIR)/a.out
