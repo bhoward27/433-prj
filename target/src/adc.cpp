@@ -1,11 +1,14 @@
 #include <string>
+#include <exception>
 
 #include "adc.h"
 
 Adc::Adc(uint8 analogInputNum)
 {
-    if (analogInputNum > 7) {
-        throw std::invalid_argument("Invalid analogInputNum -- must be in range [0, 7].");
+    if (analogInputNum > maxAnalogInputNum) {
+        throw std::invalid_argument(
+            "Invalid analogInputNum -- must be in range [0," + std::to_string(maxAnalogInputNum) + "]."
+        );
     }
     std::string filePath =
         "/sys/bus/iio/devices/iio:device0/in_voltage" +
@@ -27,15 +30,21 @@ int16 Adc::read()
     return val;
 }
 
-double Adc::convertToVolts(double x)
+double Adc::convertToVolts(double analogInputVal)
 {
-    if (x > maxInputVal || x < minInputVal) {
+    if (analogInputVal > maxInputVal || analogInputVal < minInputVal) {
         throw std::invalid_argument(
-            "x = " + std::to_string(x) + ", but x must be in range [" + std::to_string(minInputVal) + ", " + std::to_string(maxInputVal) + "]"
+            "analogInputVal = " +
+            std::to_string(analogInputVal) +
+            ", but analogInputVal must be in range [" +
+            std::to_string(minInputVal) +
+            ", " +
+            std::to_string(maxInputVal) +
+            "]"
         );
     }
 
-    return (x / maxInputVal) * maxInputVoltage;
+    return (analogInputVal / maxInputVal) * maxInputVoltage;
 }
 
 Adc::~Adc()

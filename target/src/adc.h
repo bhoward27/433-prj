@@ -2,8 +2,6 @@
 #define ADC_H_
 
 #include <fstream>
-#include <string>
-#include <exception>
 
 #include "int_typedefs.h"
 
@@ -13,6 +11,7 @@ class Adc {
         std::ifstream analogInputFile;
 
     public:
+        static const uint8 maxAnalogInputNum = 7;
         static const int16 maxInputVal = 4095;
         static const int16 minInputVal = 0;
         static constexpr double maxInputVoltage = 1.8;
