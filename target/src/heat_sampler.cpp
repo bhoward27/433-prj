@@ -91,6 +91,19 @@ double HeatSampler::getMeanTemperature()
     return meanTemperature;
 }
 
+std::queue<double> HeatSampler::getSamples()
+{
+    std::queue<double> windowSamples;
+
+    lock.lock();
+    {
+        windowSamples = samples;
+    }
+    lock.unlock();
+
+    return windowSamples;
+}
+
 double HeatSampler::_getMeanTemperature()
 {
     return sum / samples.size();

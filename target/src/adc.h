@@ -1,3 +1,6 @@
+/**
+ * Provides a class for reading from the ADC (Analog to Digital Converter).
+ */
 #ifndef ADC_H_
 #define ADC_H_
 
@@ -16,10 +19,23 @@ class Adc {
         static const int16 minInputVal = 0;
         static constexpr double maxInputVoltage = 1.8;
 
+        /**
+         * Open connection to ADC on analogInputNum.
+         * E.g., if analogInputNum = 1, open connection to AIN1.
+         */
         Adc(uint8 analogInputNum);
+
+        /// Close connection to ADC.
         ~Adc();
+
+        /**
+         * Read from the ADC input specified by analogInputNum.
+         * This returns an int16 in range [minInputVal, maxInputVal].
+         */
         int16 read();
-        static double convertToVolts(double x);
+
+        /// Convert an ADC reading into a voltage between [0, maxInputVoltage] volts.
+        static double convertToVolts(double analogInputVal);
 };
 
 #endif

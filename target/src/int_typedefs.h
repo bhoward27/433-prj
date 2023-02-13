@@ -1,6 +1,6 @@
-/*
-* This header file defines convenient aliases for fixed-width integer types.
-*/
+/**
+ * This header file defines convenient aliases for fixed-width integer types.
+ */
 #ifndef INT_TYPEDEFS_H_
 #define INT_TYPEDEFS_H_
 
