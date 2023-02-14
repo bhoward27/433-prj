@@ -14,21 +14,26 @@ h1, h2 {
 }
 
 #status-box {
-	float: right;
 	width: 250px;
 	min-height: 200pt;
 	border: thin black solid;
 	background-color: #f3f3f3;
 	padding-left: 10pt;
 	padding-right: 10pt;
+	margin-top: 25pt;
 }
 
 #left-box {
-	margin-right: 300px;	
-	border: thin black solid;
+	border: thin red solid;
 	padding-left: 10pt;
 	padding-right: 10pt;
-	min-height: 200pt;
+	min-height: 300pt;
+	margin: 35pt;
+}
+
+#outer-left-box {
+	border: thin black solid;
+	min-height: 300pt;
 }
 
 #error-box {

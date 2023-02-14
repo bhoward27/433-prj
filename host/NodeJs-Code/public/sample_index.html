@@ -2,65 +2,39 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-	<title>BeagleBone Beat-Box</title>
+	<title>The Defender</title>
 	<meta charset="UTF-8">
 	<link rel='stylesheet' href='style.css'></link>
 </head>
 
 <body>
 <form>
-	<h1>BeagleBone Beat-Box</h1>
-	<div>by Ben and Kevin!</div>
-	
+	<h1>The Defender</h1>	
 	<div id='content'>
-		<div id='status-box'>
-			<h2>BeatBox's Status</h2>
-			<div id='status'>None yet...</div>
+		<h2>Live camera feed</h2>
+		
+		<div id='pan-div'>
+			<input type="button" id="panUp" value=" Up "/>
+			<input type="button" id="panLeft" value=" Left "/>
+			<input type="button" id="panRight" value=" Right "/>
+			<input type="button" id="panDown" value=" Down "/>
 		</div>
 		
-		<div id='left-box'>
-			<div id='modediv'>
-				<h2>Drum Beat Selection</h2>
-				<p>Current drum beat mode is: <strong><span id="modeid"></span></strong></p>
-				<p>
-					<input type="button" id="modeNone"  value="None"/>
-					<input type="button" id="modeRock1" value="Rock #1"/>
-					<input type="button" id="modeRock2" value="Describe Your Beat here"/>
-				</p>
-				<h3>Volume</h3>
-				<p>
-					<input type="button" id="volumeDown" value=" - "/>
-					<input type="text"   id="volumeid" value="???" size="3" readonly/>
-					<input type="button" id="volumeUp" value=" + "/>
-					(0 - 100)
-				</p>
-				<h3>Tempo</h3>
-				<p>
-					<input type="button" id="volumeDown" value=" - "/>
-					<input type="text"   id="volumeid" value="???" size="3" readonly/>
-					<input type="button" id="volumeUp" value=" + "/>
-					(BPM)
-				</p>
-				<h2>Play Drum Sounds</h2>
-				<p>
-					<input type="button" id="hiHat"  value="Hi-Hat"/>
-					<input type="button" id="snare" value="Snare"/>
-					<input type="button" id="base" value="Base"/>
-				</p>
+		
+		<div id='outer-left-box'>
+			<div id='left-box'>
+				<div id='modediv'>
+					<h2>Display camera live feed here, and have buttons for pan directions along the border</h2>
+				</div>
 			</div>
-			
-			<div id='control'>
-				<p>
-					<input type="button" id="stop" value="Terminate Program"/>
-				</p>
-			</div>
-		</div>
-		<div id='error-box'>
-			<h2>Server Error</h2>
-			<p>Server error detected. Please resolve error before continuing.</p>
-			<div><code id='error-text'>No error yet... did you hide this div correctly via Javascript? :)</code></div>
 		</div>
 
+		<div id='status-box'>
+			<h2>System's Status</h2>
+			<div id='water-status'>Water Status: </div>
+			<div id='alarm-status'>Alarm Status: </div>
+			<div id='temp-status'>Temperature Status: </div>
+		</div>
 	</div>
 </form>
 	
