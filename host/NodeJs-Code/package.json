@@ -1,0 +1,9 @@
+{
+	"name": "nodejs-code",
+	"version": "0.0.1",
+	"description": "NodeJs code for A3",
+	"dependencies": {
+		"socket.io": "~0.9.6",
+		"mime": "~1.2.7"
+	}
+}
