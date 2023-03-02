@@ -6,7 +6,7 @@ CC_C = $(CROSS_COMPILE)g++
 STD = -std=c++17
 WFLAGS = -Wall -Werror
 OPT = -g
-CPP_FILES = main.cpp adc.cpp utils.cpp thermometer.cpp shutdown_manager.cpp heat_sampler.cpp
+CPP_FILES = main.cpp adc.cpp utils.cpp thermometer.cpp shutdown_manager.cpp heat_sampler.cpp capture.c
 
 all: a.out
 
