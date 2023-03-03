@@ -33,11 +33,14 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "webcam.h"
+
 #define PORT_T 3000
 #define RPORT_T 1234  // Port for NodeJS
 static struct sockaddr_in sinT;
 static struct sockaddr_in sinRemoteT;
 static int socketDescriptorT;
+int stop = 0;
 
 #define CLEAR(x) memset(&(x), 0, sizeof(x))
 
@@ -208,7 +211,8 @@ void mainloop(void)
     count = frame_count;
 
     while ((count-- > 0) || loopIsInfinite) {
-        for (;;) {
+        if (stop) break;
+        while (!stop) {
             fd_set fds;
             struct timeval tv;
             int r;
@@ -217,7 +221,7 @@ void mainloop(void)
             FD_SET(fd, &fds);
 
             /* Timeout. */
-            tv.tv_sec = 30;
+            tv.tv_sec = 10;
             tv.tv_usec = 0;
 
             r = select(fd + 1, &fds, NULL, NULL, &tv);
@@ -329,7 +333,7 @@ void uninit_device(void)
 
 void init_read(unsigned int buffer_size)
 {
-    buffers = (struct buffer*)calloc(1, sizeof(*buffers));
+    buffers = (struct buffer *)calloc(1, sizeof(*buffers));
 
     if (!buffers) {
         fprintf(stderr, "Out of memory\n");
@@ -373,7 +377,7 @@ void init_mmap(void)
         exit(EXIT_FAILURE);
     }
 
-    buffers = (struct buffer*)calloc(req.count, sizeof(*buffers));
+    buffers = (struct buffer *)calloc(req.count, sizeof(*buffers));
 
     if (!buffers) {
         fprintf(stderr, "Out of memory\n");
@@ -425,7 +429,7 @@ void init_userp(unsigned int buffer_size)
         }
     }
 
-    buffers = (struct buffer*)calloc(4, sizeof(*buffers));
+    buffers = (struct buffer *)calloc(4, sizeof(*buffers));
 
     if (!buffers) {
         fprintf(stderr, "Out of memory\n");
@@ -512,7 +516,6 @@ void init_device(void)
     CLEAR(fmt);
 
     fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-    fprintf(stderr, "Force Format %d\n", force_format);
     if (force_format) {
         if (force_format == 2) {
             fmt.fmt.pix.width = 1280;
@@ -588,6 +591,8 @@ void open_device(void)
     }
 }
 
+void stopLoop() { stop = 1; }
+
 int webcam()
 {
     printf("Starting streaming\n");
@@ -609,74 +614,3 @@ int webcam()
     printf("Finished streaming\n");
     return 0;
 }
-
-// int main(int argc, char **argv)
-// {
-//     dev_name = "/dev/video0";
-
-//     for (;;) {
-//         int idx;
-//         int c;
-
-//         c = getopt_long(argc, argv, short_options, long_options, &idx);
-
-//         if (-1 == c) break;
-
-//         switch (c) {
-//             case 0: /* getopt_long() flag */
-//                 break;
-
-//             case 'd':
-//                 dev_name = optarg;
-//                 break;
-
-//             case 'h':
-//                 usage(stdout, argc, argv);
-//                 exit(EXIT_SUCCESS);
-
-//             case 'm':
-//                 io = IO_METHOD_MMAP;
-//                 break;
-
-//             case 'r':
-//                 io = IO_METHOD_READ;
-//                 break;
-
-//             case 'u':
-//                 io = IO_METHOD_USERPTR;
-//                 break;
-
-//             case 'o':
-//                 out_buf++;
-//                 break;
-
-//             case 'f':
-//                 force_format = 1;
-//                 break;
-
-//             case 'F':
-//                 force_format = 2;
-//                 break;
-
-//             case 'c':
-//                 errno = 0;
-//                 frame_count = strtol(optarg, NULL, 0);
-//                 if (errno) errno_exit(optarg);
-//                 break;
-
-//             default:
-//                 usage(stderr, argc, argv);
-//                 exit(EXIT_FAILURE);
-//         }
-//     }
-
-//     open_device();
-//     init_device();
-//     start_capturing();
-//     mainloop();
-//     stop_capturing();
-//     uninit_device();
-//     close_device();
-//     fprintf(stderr, "\n");
-//     return 0;
-// }

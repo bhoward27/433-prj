@@ -41,6 +41,8 @@ void close_device(void);
 
 void open_device(void);
 
+void stopLoop();
+
 int webcam();
 
 #endif
