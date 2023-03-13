@@ -12,3 +12,13 @@ void sleepForMs(int64 delayInMs)
     struct timespec reqDelay = {seconds, nanoseconds};
     nanosleep(&reqDelay, (struct timespec *) NULL);
 }
+
+void sleepForDoubleMs(double delayInMs) 
+{
+    const int64 NS_PER_MS = 1000 * 1000;
+    double delayNs = delayInMs * (double)NS_PER_MS;
+    int seconds = 0;
+    int nanoseconds = delayNs;
+    struct timespec reqDelay = {seconds, nanoseconds};
+    nanosleep(&reqDelay, (struct timespec *) NULL);    
+}
