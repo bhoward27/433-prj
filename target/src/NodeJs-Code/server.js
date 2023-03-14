@@ -19,7 +19,7 @@ var server = http.createServer(function(request, response) {
 	var filePath = false;
 	
 	if (request.url == '/') {
-		filePath = 'public/index.html';
+		filePath = 'public/sample_index.html';
 	} else {
 		filePath = 'public' + request.url;
 	}
