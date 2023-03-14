@@ -13,3 +13,6 @@ You will need the g++ cross-compiler to build the code in target/src. To install
 Hardware Setup
 To get temperature readings, the TMP36 temperature sensor must be wired up to the BeagleBone as shown in this student guide (NOTE: this guide was not created by The Defenders): https://opencoursehub.cs.sfu.ca/bfraser/grav-cms/cmpt433/links/files/2022-student-howtos/TMP36TemperatureSensor.pdf
 For our project, the sensor must be connected to AIN1.
+
+To get microphone readings, the MAX9814 microphone must be wired with VDD to 3.3v power, GND to ground, and OUT to AIN4(pin 33)
+Before using the microphone after each reboot, the user must run startMic.sh
