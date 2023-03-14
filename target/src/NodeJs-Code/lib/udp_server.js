@@ -39,16 +39,34 @@ function handleCommand(socket) {
 			var address = client.address();
 			console.log('UDP Client: listening on ' + address.address + ":" + address.port);
 		});
+
+		var flag = true;
 		// Handle an incoming message over the UDP from the local application.
 		client.on('message', function (message, remote) {
 			console.log("UDP Client: message Rx" + remote.address + ':' + remote.port +' - ' + message);
 
 			var reply = message.toString('utf8')
-			socket.emit('commandReply', reply);
-
+			// Learned how to compare part of string from this link: https://stackoverflow.com/questions/13833944/compare-part-of-string-in-javascript
+			if (reply.includes("update")) {
+				socket.emit('updateReply', reply);
+			} 
+			else {
+				socket.emit('commandReply', reply);
+			}
+			
 			client.close();
-
+			flag = false;
 		});
+
+		setTimeout(function () {
+			if (flag) {
+				socket.emit('bbgNotRunning', "BBG C++ application is not responding, please check that it is running");
+			}
+			else {
+				socket.emit('bbgRunning', 'BBG is running');
+			}
+		}, 1000);
+
 		client.on("UDP Client: close", function() {
 			console.log("closed");
 		});
