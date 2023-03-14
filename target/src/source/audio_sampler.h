@@ -8,9 +8,7 @@
 
 #include "microphone.h"
 #include "shutdown_manager.h"
-#include "edge-impulse-sdk/classifier/ei_run_classifier.h"
 
-#define AUDIO_BUFFER_SIZE EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE
 #define AUDIO_READ_BUFFER_SIZE 100
 #define AUDIO_BUFFER_SLEEP 12
 
@@ -31,10 +29,6 @@ class AudioSampler {
         bool isFull;
         bool isFirstBuffer;
         bool printUpdates;
-
-        signal_t signal; //wrapper for raw data
-        ei_impulse_result_t result; //classifier return
-        EI_IMPULSE_ERROR res; //return code
 
         void run();
 

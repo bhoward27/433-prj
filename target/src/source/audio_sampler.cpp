@@ -6,8 +6,12 @@
 #include "utils.h"
 
 #include "audioMixer.h"
+#include "edge-impulse-sdk/classifier/ei_run_classifier.h"
+
+#define AUDIO_BUFFER_SIZE EI_CLASSIFIER_SLICE_SIZE
 
 int16_t sound[AUDIO_BUFFER_SIZE];
+
 
 
 AudioSampler::AudioSampler(ShutdownManager* shutdownManager, int sampleRateHz, int windowSize, bool printUpdates)
@@ -35,7 +39,7 @@ AudioSampler::AudioSampler(ShutdownManager* shutdownManager, int sampleRateHz, i
     this->isFirstBuffer = true;
     this->isFull = false;
 
-    AudioMixer_init();
+    // AudioMixer_init();
 
     samplePeriodMs = 1000.0 / sampleRateHz;
     sum = 0;
@@ -45,7 +49,8 @@ AudioSampler::AudioSampler(ShutdownManager* shutdownManager, int sampleRateHz, i
 void AudioSampler::waitForShutdown()
 {
     thread.join();
-    AudioMixer_cleanup();
+    // AudioMixer_cleanup();
+    run_classifier_deinit();
 }
 
 
@@ -54,12 +59,17 @@ static int getSound(size_t offset, size_t length, float *out_ptr) {
 }
 
 void AudioSampler::audioClassifier() {
+    signal_t signal; //wrapper for raw data
+    static ei_impulse_result_t result; //classifier return
     lock.lock();
-    signal.total_length = EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE;
+    signal.total_length = EI_CLASSIFIER_SLICE_SIZE;
     signal.get_data = &getSound;
 
-    res = run_classifier(&signal, &result, false);
-    printf("classifier returned: %d", result.classification[0].value);
+    EI_IMPULSE_ERROR res = run_classifier_continuous(&signal, &result, false, false);
+    // printf("error code: %d\n", res);
+    printf("%s: %f\n", result.classification[0].label, result.classification[1].value);
+    // memset(sound, 0, AUDIO_BUFFER_SIZE);
+    lock.unlock();
 }
 
 void AudioSampler::run()
@@ -76,6 +86,7 @@ void AudioSampler::run()
     }
     int count = 0;
     // Discard old samples and add new ones to the window.
+    run_classifier_init();
     while (!shutdownManager->isShutdownRequested()) {
         
         read(fd, buffer, AUDIO_READ_BUFFER_SIZE * sizeof(uint16_t));
@@ -84,7 +95,9 @@ void AudioSampler::run()
         for(int i = 0; i < AUDIO_READ_BUFFER_SIZE; i++) {
             if(count >= AUDIO_BUFFER_SIZE) {
                 count = 0;
+                lock.unlock();
                 audioClassifier();
+                lock.lock();
                 // AudioMixer_pushAudio(sound, AUDIO_BUFFER_SIZE);
                 // memset(sound, 0, AUDIO_BUFFER_SIZE * sizeof(int16_t));
             }
@@ -96,8 +109,9 @@ void AudioSampler::run()
             // printf("%d\n", sound[count]);
             // count++;
             // buffer[i] *= 2;
-            sound[count] = buffer[i];
+            sound[count++] = buffer[i] +5;
         }
+        // printf("count = %d", count);
         // AudioMixer_pushAudio(buffer, AUDIO_READ_BUFFER_SIZE);
         // memset(sound, 0, AUDIO_BUFFER_SIZE * sizeof(int16_t));
         lock.unlock();
