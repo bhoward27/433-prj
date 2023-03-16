@@ -10,7 +10,7 @@ OPT = -g
 all: project node
 
 project: main.cpp
-	$(CC_C) $(WFLAGS) $(OPT) main.cpp udpServer.cpp utils.cpp -o $(OUT_DIR)/project -lpthread
+	$(CC_C) $(WFLAGS) $(OPT) main.cpp udpServer.cpp utils.cpp waterLevelSensor.cpp -o $(OUT_DIR)/project -lpthread
 
 node: node_deploy node_install
 

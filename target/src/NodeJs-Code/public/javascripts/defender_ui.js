@@ -11,6 +11,10 @@ $(document).ready(function() {
 		sendCommandViaUDP("test");
 	});
 
+	$('#terminate').click(function(){
+		sendCommandViaUDP("terminate");
+	});
+
 	socket.on('bbgNotRunning', function(result) {
 		if ($('#error-box').is(":hidden")) {
 			var newDiv = $('<code></code>')

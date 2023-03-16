@@ -11,6 +11,7 @@
 #include <exception>
 
 #include "udpServer.h"
+#include "waterLevelSensor.h"
 
 #define MSG_MAX_LEN 1500
 #define PORT        12345
@@ -23,11 +24,10 @@
 
 static pthread_t samplerId;
 static int socketDescriptor;
-static int cleanupFlag = 0;
 
 static void *updServerThread(void *args)
 {
-	while (!cleanupFlag) {
+	while (1) {
 		// Get the data (blocking)
 		// Will change sin (the address) to be the address of the client.
 		// Note: sin passes information in and out of call!
@@ -59,7 +59,7 @@ static void *updServerThread(void *args)
 		}
 		else if (strncmp(messageRx, "update", strlen("update")) == 0) {
 			char str[1024];
-			sprintf(str, "update %d", 100);
+			sprintf(str, "update %f", WaterLevelSensor_getVoltage1Reading());
 
 			char messageTx[MSG_MAX_LEN];
 			sprintf(messageTx, "%s", str);
@@ -109,6 +109,5 @@ void UdpServer_initialize()
 
 void UdpServer_cleanup(void)
 {
-	cleanupFlag = 1;
     pthread_join(samplerId, NULL);
 }
