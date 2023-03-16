@@ -1,3 +1,5 @@
+# Makefile from edge-impulse example Makefile
+
 OUT_DIR = $(HOME)/cmpt433/public/myApps
 
 # Tool macros
