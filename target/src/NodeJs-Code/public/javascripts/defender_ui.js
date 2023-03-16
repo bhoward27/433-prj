@@ -42,10 +42,7 @@ function sendCommandViaUDP(message) {
 	socket.on('updateReply', function(result) {
 		flag = false;
 		result = result.split(' ');
-		var newDiv = $('<code></code>')
-			.text("Water Status:" + result[1])
-			.wrapInner("<div></div>");
-		$('#water-status').html(newDiv);
+		$('#water-level').text(result[1]);
 	});
 
 	setTimeout(function () {
