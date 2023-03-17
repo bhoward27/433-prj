@@ -33,5 +33,6 @@
 *.out
 *.app
 
-# Specific files
+# Specific files and folders
 target/src/twilio/config.h
+.vscode

@@ -45,7 +45,7 @@ class HeatSampler {
         HeatSampler(ShutdownManager* shutdownManager, int sampleRateHz, int windowSize, bool printUpdates = false);
 
         /// Block until shutdownManager->requestShutdown() is called somewhere in the program.
-        void waitForShutdown();
+        ~HeatSampler();
 
         /// Return the window-averaged temperature in degrees Celsius.
         double getMeanTemperature();

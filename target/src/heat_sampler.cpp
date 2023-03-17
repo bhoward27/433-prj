@@ -73,7 +73,7 @@ void HeatSampler::run()
     }
 }
 
-void HeatSampler::waitForShutdown()
+HeatSampler::~HeatSampler()
 {
     thread.join();
 }

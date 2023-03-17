@@ -16,7 +16,7 @@ INCLUDE = -I$(CURLDIR)/include -I$(SSLDIR)/include -I$(ZDIR)/include
 LDFLAGS = -L$(CURLDIR)/lib -Wl,-rpath -Wl,$(CURLDIR)/lib -L$(SSLDIR)/lib -Wl,-rpath -Wl,$(SSLDIR)/lib -L$(ZDIR)/lib -Wl,-rpath -Wl,$(ZDIR)/lib
 LDLIBS = -lcurl -pthread
 
-CPP_FILES = main.cpp adc.cpp utils.cpp thermometer.cpp shutdown_manager.cpp heat_sampler.cpp twilio/twilio.cpp
+CPP_FILES = main.cpp adc.cpp utils.cpp thermometer.cpp shutdown_manager.cpp heat_sampler.cpp sms.cpp twilio/twilio.cpp
 
 all: a.out
 
