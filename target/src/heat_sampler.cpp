@@ -19,7 +19,7 @@ HeatSampler::HeatSampler(ShutdownManager* shutdownManager, int sampleRateHz, int
         );
     }
     if (shutdownManager == nullptr) {
-        std::invalid_argument("shutdownManager = nullptr");
+        throw std::invalid_argument("shutdownManager = nullptr");
     }
 
     this->shutdownManager = shutdownManager;

@@ -13,7 +13,7 @@ class Thermometer {
         Adc ain;
 
     public:
-        static const uint8 analogInputNum = 1;
+        static const uint8 analogInputNum = 2;
 
         Thermometer();
 

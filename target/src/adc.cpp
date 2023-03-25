@@ -27,6 +27,7 @@ int16 Adc::read()
     analogInputFile.clear();
     // Set file position back to start of the file.
     analogInputFile.seekg(0, analogInputFile.beg);
+
     return val;
 }
 

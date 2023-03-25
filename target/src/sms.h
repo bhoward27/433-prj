@@ -1,4 +1,5 @@
 // TODO: Add explanation for file.
+
 #ifndef SMS_H_
 #define SMS_H_
 
@@ -15,15 +16,28 @@
 
 class Sms {
     public:
+        const std::string badToPhoneNumber = "+10123456789";
         const std::string defaultToPhoneNumber = twilio::toPhoneNumber;
         const std::string shutdownMessage = "!SHUTDOWN!";
 
-        Sms(ShutdownManager* shutdownManager)
+        const std::string updateHeader = "**** Sms ****\n";
+
+        Sms(ShutdownManager* shutdownManager, bool printUpdates = false)
         {
             if (shutdownManager == nullptr) {
-                std::invalid_argument("shutdownManager = nullptr");
+                throw std::invalid_argument("shutdownManager = nullptr");
             }
             this->shutdownManager = shutdownManager;
+
+            if (toPhoneNumber == badToPhoneNumber) {
+                throw std::invalid_argument(
+                    "toPhoneNumber == '" + badToPhoneNumber + "', which indicates that twilio::toPhoneNumber in " +
+                    "'twilio/config.h' has not been changed to a valid phone number. You should change this constant " +
+                    "to your personal phone number, then re-compile the application."
+                );
+            }
+
+            this->printUpdates = printUpdates;
 
             thread = std::thread([this] {run();});
         }
@@ -65,7 +79,11 @@ class Sms {
         std::queue<std::string> messages;
         std::mutex lock; // Lock for the messages queue.
         std::condition_variable cond_var; // For the messages queue.
+        bool printUpdates;
 
+        /**
+         * Runs thread that processe
+         */
         void run()
         {
             while (!shutdownManager->isShutdownRequested()) {
@@ -89,7 +107,6 @@ class Sms {
 
                     if (message == shutdownMessage && shutdownManager->isShutdownRequested()) return;
 
-                    // Send the message.
                     send(message);
 
                     lock.lock();
@@ -101,14 +118,15 @@ class Sms {
             }
         }
 
-        int send(std::string message)
+        /**
+         *  Blocking call which sends message using the Twilio online SMS service.
+         *  Returns true if message was sent successfully and false otherwise.
+         */
+        bool send(std::string message)
         {
-            // TODO: Improve.
-
             // CITATION: This code is based on code from https://github.com/TwilioDevEd/twilio_cpp_demo.git.
             // See here for the tutorial related to the demo:
             // https://www.twilio.com/docs/sms/tutorials/how-to-send-sms-messages-cpp?code-sample=code-using-the-twilio-rest-api-from-c&code-language=cc&code-sdk-version=default
-
             std::string response;
             bool verbose = true;
             std::string picture_url = "";
@@ -129,21 +147,24 @@ class Sms {
 
             // Report success or failure
             if (!message_success) {
-                    if (verbose) {
-                            std::cout << "Message send failed." << std::endl;
-                            if (!response.empty()) {
-                                    std::cout << "Response:" << std::endl
-                                            << response << std::endl;
-                            }
+                if (printUpdates) {
+                    std::cout << updateHeader;
+                    std::cout << "Message send failed." << std::endl;
+                    if (!response.empty()) {
+                        std::cout << "Response:" << std::endl
+                                    << response << std::endl;
                     }
-                    return -1;
-            } else if (verbose) {
-                    std::cout << "SMS sent successfully!" << std::endl;
-                    std::cout << "Response:" << std::endl << response
-                            << std::endl;
+                    std::cout << std::endl;
+                }
+                return false;
+            } else if (printUpdates) {
+                std::cout << updateHeader;
+                std::cout << "SMS sent successfully!" << std::endl;
+                std::cout << "Response:" << std::endl << response << std::endl;
+                std::cout << std::endl;
             }
 
-            return 0;
+            return true;
         }
 };
 #endif
