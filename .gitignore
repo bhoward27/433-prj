@@ -32,3 +32,6 @@
 *.exe
 *.out
 *.app
+.vscode/settings.json
+target/src/.vscode/settings.json
+target/src/.vscode/c_cpp_properties.json
