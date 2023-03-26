@@ -1,3 +1,4 @@
+// Header file for the PWM class
 #ifndef PWM_H_
 #define PWM_H_
 #include "shutdown_manager.h"
@@ -5,6 +6,7 @@
 #include <iostream>
 #include <thread>
 
+// defines for the timing of the PWM signal
 #define PERIOD_NS 20000000
 
 #define DUTY_CYCLE_0 1000000
@@ -18,11 +20,16 @@ class PWM {
         std::thread thread;
         int currentDutyCycle = 0;
         void run();
+        // Function to write to a file
         void writeToFile(std::string filename, std::string content);
+        // Set the period of the PWM signal
         void setPeriod(int period);
+        // Set the duty cycle of the PWM signal
         void setDutyCycle(int dutyCycle);
+        // Enable or disable the PWM signal
         void enablePWM();
         void disablePWM();
+        // Move the servo left or right
         void moveLeft();
         void moveRight();
         ShutdownManager *shutdownManager = nullptr;
