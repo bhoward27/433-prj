@@ -7,12 +7,15 @@
 #include <thread>
 
 // defines for the timing of the PWM signal
+// period is 20ms
 #define PERIOD_NS 20000000
 
+// duty cycle is 1ms to 2ms
 #define DUTY_CYCLE_0 1000000
 #define DUTY_CYCLE_90 1500000
 #define DUTY_CYCLE_180 2000000
 
+// change the duty cycle by 0.5ms
 #define DUTY_CYCLE_CHANGE_DIRECTION 500000
 
 class PWM {
