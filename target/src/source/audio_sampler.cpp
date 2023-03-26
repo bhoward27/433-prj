@@ -14,35 +14,16 @@ int16_t sound[AUDIO_BUFFER_SIZE];
 
 
 
-AudioSampler::AudioSampler(ShutdownManager* shutdownManager, int sampleRateHz, int windowSize, bool printUpdates)
+AudioSampler::AudioSampler(ShutdownManager* shutdownManager)
 {
-    if (sampleRateHz <= 0) {
-        throw std::invalid_argument(
-            "sampleRateHz = " + std::to_string(sampleRateHz) + ", but sample rate must be greater than 0."
-        );
-    }
-    if (windowSize <= 0) {
-        throw std::invalid_argument(
-            "windowSize = " + std::to_string(sampleRateHz) + ", but window size must be greater than 0."
-        );
-    }
     if (shutdownManager == nullptr) {
         std::invalid_argument("shutdownManager = nullptr");
     }
 
     this->shutdownManager = shutdownManager;
-    this->sampleRateHz = sampleRateHz;
-    this->windowSize = windowSize;
-    this->printUpdates = printUpdates;
-    this->samplesRead = 0;
-
-    this->isFirstBuffer = true;
-    this->isFull = false;
 
     // AudioMixer_init();
 
-    samplePeriodMs = 1000.0 / sampleRateHz;
-    sum = 0;
     thread = std::thread([this] {run();});
 }
 
@@ -98,51 +79,10 @@ void AudioSampler::run()
                 lock.unlock();
                 audioClassifier();
                 lock.lock();
-                // AudioMixer_pushAudio(sound, AUDIO_BUFFER_SIZE);
-                // memset(sound, 0, AUDIO_BUFFER_SIZE * sizeof(int16_t));
             }
-            // // int16_t temp = buffer[i];
-            // // if(temp < 0) temp = 0;
-            
-            // sound[count] = buffer[i];
-
-            // printf("%d\n", sound[count]);
-            // count++;
-            // buffer[i] *= 2;
-            sound[count++] = buffer[i] +5;
+            sound[count++] = buffer[i];
         }
-        // printf("count = %d", count);
-        // AudioMixer_pushAudio(buffer, AUDIO_READ_BUFFER_SIZE);
-        // memset(sound, 0, AUDIO_BUFFER_SIZE * sizeof(int16_t));
         lock.unlock();
         sleepForDoubleMs(AUDIO_BUFFER_SLEEP);
-        
-        //     if(isFirstBuffer) {
-        //         audioWindow.push_back(newSample);
-        //     } else {
-        //         audioWindow2.push_back(newSample);
-        //     }
-        //     if(++samplesRead == windowSize) {
-        //         samplesRead = 0;
-        //         if(isFirstBuffer) {
-        //             int16 *arr = &audioWindow[0];
-        //             AudioMixer_pushAudio(arr, windowSize);
-        //             audioWindow2.clear();
-        //         } else {
-        //             int16 *arr = &audioWindow2[0];
-        //             AudioMixer_pushAudio(arr, windowSize);
-        //             audioWindow.clear();
-        //         }
-        //         isFirstBuffer = !isFirstBuffer;
-        //         isFull = true;
-        //     }
-        
-        // lock.unlock();
-
-        // sleepForMs(samplePeriodMs);
     }
-}
-
-void AudioSampler::_printUpdate(double sample) {
-    std::cout << sample << "\n";
 }

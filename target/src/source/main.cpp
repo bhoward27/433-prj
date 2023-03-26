@@ -16,7 +16,7 @@ int main() {
 
 
     // heatSampler.waitForShutdown();
-    AudioSampler audioSampler(&shutdownManager, 8000, 100, false);
+    AudioSampler audioSampler(&shutdownManager);
 
     audioSampler.waitForShutdown();
 

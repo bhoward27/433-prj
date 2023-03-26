@@ -15,25 +15,12 @@
 class AudioSampler {
     private:
         Microphone mic;
-        int sampleRateHz;
-        int windowSize;
-        double samplePeriodMs;
-        double sum;
-        std::queue<double> samples;
-        std::vector<int16> audioWindow;
-        std::vector<int16> audioWindow2;
-        int samplesRead;
         std::thread thread;
         std::mutex lock;
         ShutdownManager* shutdownManager = nullptr;
-        bool isFull;
-        bool isFirstBuffer;
-        bool printUpdates;
 
+        //start sampling microphone and running fire alarm inference
         void run();
-
-        // Not thread-safe.
-        void _printUpdate(double newSample);
 
         void audioClassifier();
 
@@ -46,9 +33,8 @@ class AudioSampler {
          *
          * @param shutdownManager a pointer to the program's ShutdownManager, which will control when the HeatSampler's
          * thread stops.
-         * @param printUpdates set to true if you want an update printed to the console after each sample is taken.
          */
-        AudioSampler(ShutdownManager* shutdownManager, int sampleRateHz, int windowSize, bool printUpdates = false);
+        AudioSampler(ShutdownManager* shutdownManager);
 
         /// Block until shutdownManager->requestShutdown() is called somewhere in the program.
         void waitForShutdown();
