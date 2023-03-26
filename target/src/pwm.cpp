@@ -44,6 +44,7 @@ void PWM::moveLeft() {
     } else {
         setDutyCycle(this->currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION);
     }
+    sleepForMs(1500);
 }
 
 void PWM::moveRight() {
@@ -52,6 +53,7 @@ void PWM::moveRight() {
     } else {
         setDutyCycle(this->currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION);
     }
+    sleepForMs(1500);
 }
 
 void PWM::run() {
