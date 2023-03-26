@@ -1,4 +1,5 @@
 #include <ctime>
+#include <bits/stdc++.h>
 
 #include "utils.h"
 
@@ -11,4 +12,13 @@ void sleepForMs(int64 delayInMs)
     int nanoseconds = delayNs % NS_PER_SECOND;
     struct timespec reqDelay = {seconds, nanoseconds};
     nanosleep(&reqDelay, (struct timespec *) NULL);
+}
+
+std::string toUpper(std::string s)
+{
+    // CITATION: Code copied from here:
+    // https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/.
+    std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+
+    return s;
 }

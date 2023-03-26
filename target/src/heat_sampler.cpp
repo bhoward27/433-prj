@@ -6,7 +6,7 @@
 
 #include "utils.h"
 
-HeatSampler::HeatSampler(ShutdownManager* shutdownManager, int sampleRateHz, int windowSize, bool printUpdates)
+HeatSampler::HeatSampler(ShutdownManager* shutdownManager, Notifier* notifier, int sampleRateHz, int windowSize, bool printUpdates)
 {
     if (sampleRateHz <= 0) {
         throw std::invalid_argument(
@@ -21,8 +21,12 @@ HeatSampler::HeatSampler(ShutdownManager* shutdownManager, int sampleRateHz, int
     if (shutdownManager == nullptr) {
         throw std::invalid_argument("shutdownManager = nullptr");
     }
+    if (notifier == nullptr) {
+        throw std::invalid_argument("notifier = nullptr");
+    }
 
     this->shutdownManager = shutdownManager;
+    this->notifier = notifier;
     this->sampleRateHz = sampleRateHz;
     this->windowSize = windowSize;
     this->printUpdates = printUpdates;
@@ -42,8 +46,10 @@ void HeatSampler::run()
         {
             sum += sample;
             samples.push(sample);
+            double meanTemp = _getMeanTemperature();
+            checkExtremes(meanTemp);
             if (printUpdates) {
-                _printUpdate(sample);
+                _printUpdate(sample, meanTemp);
             }
         }
         lock.unlock();
@@ -63,8 +69,10 @@ void HeatSampler::run()
 
             samples.push(newSample);
             sum = sum + newSample - oldestSample;
+            double meanTemp = _getMeanTemperature();
+            checkExtremes(meanTemp);
             if (printUpdates) {
-                _printUpdate(newSample);
+                _printUpdate(newSample, meanTemp);
             }
         }
         lock.unlock();
@@ -109,9 +117,8 @@ double HeatSampler::_getMeanTemperature()
     return sum / samples.size();
 }
 
-void HeatSampler::_printUpdate(double newSample)
+void HeatSampler::_printUpdate(double newSample, double avgTemp)
 {
-    double avgTemp = _getMeanTemperature();
     int currentWindowSize = samples.size();
     double windowPeriodMs = samplePeriodMs * currentWindowSize;
     std::cout << "**** HeatSampler ****\n"

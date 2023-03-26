@@ -1,5 +1,5 @@
 #include <string>
-#include <exception>
+#include <stdexcept>
 
 #include "adc.h"
 
