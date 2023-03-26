@@ -31,7 +31,7 @@ class AudioSampler {
          * Start a thread that samples the current temperature with a frequency of sampleRateHz. The thread also
          * does simple window averaging for the last windowSize samples.
          *
-         * @param shutdownManager a pointer to the program's ShutdownManager, which will control when the HeatSampler's
+         * @param shutdownManager a pointer to the program's ShutdownManager, which will control when the AudioSampler's
          * thread stops.
          */
         AudioSampler(ShutdownManager* shutdownManager);
