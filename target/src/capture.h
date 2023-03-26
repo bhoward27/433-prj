@@ -1,3 +1,4 @@
+// Header file for streaming the webcam
 #ifdef __cplusplus
 extern "C" {
 #endif
