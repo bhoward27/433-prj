@@ -1,4 +1,3 @@
-// TODO: Add explanation for the file.
 // CITATION: This code was cloned from https://github.com/TwilioDevEd/twilio_cpp_demo.git.
 // See here for the tutorial related to the demo:
 // https://www.twilio.com/docs/sms/tutorials/how-to-send-sms-messages-cpp?code-sample=code-using-the-twilio-rest-api-from-c&code-language=cc&code-sdk-version=default

@@ -13,7 +13,7 @@ int main() {
     Notifier notifier(&shutdownManager, true);
 
     // Sample the temperature at 1 Hz and calculate window average over the last 10 samples.
-    HeatSampler heatSampler(&shutdownManager, &notifier, 1, 10, true);
+    // HeatSampler heatSampler(&shutdownManager, &notifier, 1, 10, true);
     // Construct like this instead if you want the sampler to not print anything:
     // HeatSampler heatSampler(&shutdownManager, 1, 10);
 
@@ -22,21 +22,21 @@ int main() {
     // Sms sms(&shutdownManager);
 
     // Example of queueing three messages to be sent by sms.
-    // notifier.raiseEvent(Event::extremeHeat, "Temperature is real darn high right now.");
-    // sleepForMs(500);
+    notifier.raiseEvent(Event::extremeHeat, "Temperature is real darn high right now.");
+    sleepForMs(500);
     // notifier.raiseEvent(Event::extremeHeat, "hot hot hot!");
     // sleepForMs(500);
+    notifier.clearEvent(Event::extremeHeat);
+    sleepForMs(500);
     // notifier.clearEvent(Event::extremeHeat);
     // sleepForMs(500);
-    // notifier.clearEvent(Event::extremeHeat);
-    // sleepForMs(500);
-    // notifier.clearEvent(Event::flood);
-    // sleepForMs(500);
+    notifier.clearEvent(Event::flood);
+    sleepForMs(500);
     // notifier.raiseEvent(Event::extremeHeat, "hot hot hot!");
     // sleepForMs(500);
 
-    // shutdownManager.requestShutdown();
-    // notifier.wakeUpSmsForShutdown();
+    shutdownManager.requestShutdown();
+    notifier.wakeUpSmsForShutdown();
 
     return 0;
 }

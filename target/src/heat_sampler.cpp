@@ -2,7 +2,8 @@
 
 #include <iostream>
 #include <exception>
-#include <string>
+#include <sstream>
+#include <iomanip>
 
 #include "utils.h"
 
@@ -47,7 +48,7 @@ void HeatSampler::run()
             sum += sample;
             samples.push(sample);
             double meanTemp = _getMeanTemperature();
-            checkExtremes(meanTemp);
+            checkForExtremeTemp(meanTemp);
             if (printUpdates) {
                 _printUpdate(sample, meanTemp);
             }
@@ -70,7 +71,7 @@ void HeatSampler::run()
             samples.push(newSample);
             sum = sum + newSample - oldestSample;
             double meanTemp = _getMeanTemperature();
-            checkExtremes(meanTemp);
+            checkForExtremeTemp(meanTemp);
             if (printUpdates) {
                 _printUpdate(newSample, meanTemp);
             }
@@ -115,6 +116,31 @@ std::queue<double> HeatSampler::getSamples()
 double HeatSampler::_getMeanTemperature()
 {
     return sum / samples.size();
+}
+
+void HeatSampler::checkForExtremeTemp(double temperature)
+{
+    if (temperature <= extremeCold) {
+        std::stringstream message;
+        message << "Temperature is " << std::fixed << std::setprecision(1) << temperature << degreesCSymbol
+                << ", which is colder than " << extremeCold << degreesCSymbol << "!";
+        notifier->raiseEvent(Event::extremeCold, message.str());
+    } else if (temperature >= extremeCold + hysteresis) {
+        std::stringstream message;
+        message << "Warmed up to " << std::fixed << std::setprecision(1) << temperature << degreesCSymbol << ".";
+        notifier->clearEvent(Event::extremeCold, message.str());
+    }
+
+    if (temperature >= extremeHeat) {
+        std::stringstream message;
+        message << "Temperature is " << std::fixed << std::setprecision(1) << temperature << degreesCSymbol
+                << ", which is hotter than " << extremeHeat << degreesCSymbol << "!";
+        notifier->raiseEvent(Event::extremeHeat, message.str());
+    } else if (temperature <= extremeHeat - hysteresis) {
+        std::stringstream message;
+        message << "Cooled down to " << std::fixed << std::setprecision(1) << temperature << degreesCSymbol << ".";
+        notifier->clearEvent(Event::extremeHeat, message.str());
+    }
 }
 
 void HeatSampler::_printUpdate(double newSample, double avgTemp)
