@@ -13,3 +13,5 @@ You will need the g++ cross-compiler to build the code in target/src. To install
 Hardware Setup
 To get temperature readings, the TMP36 temperature sensor must be wired up to the BeagleBone as shown in this student guide (NOTE: this guide was not created by The Defenders): https://opencoursehub.cs.sfu.ca/bfraser/grav-cms/cmpt433/links/files/2022-student-howtos/TMP36TemperatureSensor.pdf
 For our project, the sensor must be connected to AIN1.
+
+For Pan/Tilt, use the P9_21 pin for the servo's PWM connection on bottom servo motor. The rest of the setup is in this student guide: https://opencoursehub.cs.sfu.ca/bfraser/grav-cms/cmpt433/links/files/2022-student-howtos-ensc351/ServoPanTiltGuide.pdf The student guide uses both servo motors, but we only use the bottom one, so only the setup for Servo 1 is required.
