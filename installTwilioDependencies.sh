@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# TODO: Add explanation for this file.
+# This script takes all necessary steps to install the three libraries required by Twilio on the host machine:
+# OpenSSL, zlib, and curl. If everything succeeds, then you will only need to run this script once.
 
 # Make this script exit immediately if any commands fail.
 set -e
