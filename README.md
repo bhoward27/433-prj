@@ -18,6 +18,13 @@ If the file `target/src/twilio/config.h` is not present, ask for the file from a
 Regardless, please change the `toPhoneNumber` constant in that file to your own personal phone number (add +1 in front for Canadian numbers).
 
 Hardware Setup
-To get temperature readings, the TMP36 temperature sensor must be wired up to the BeagleBone as shown in this student guide (NOTE: this guide was not created by The Defenders): https://opencoursehub.cs.sfu.ca/bfraser/grav-cms/cmpt433/links/files/2022-student-howtos/TMP36TemperatureSensor.pdf
-For our project, the sensor must be connected to AIN1.
-# TODO: Update the above section for wiring up with voltage divider + adjust conversion formula in code (likely just multiply by 2).
+To get temperature readings, the TMP36 temperature sensor must be wired up to the BeagleBone with a voltage divider setup, with the sensor's Vout connected to AIN2 on the ADC. Ask Ben if you don't know how to wire it up.
+
+Building the App on the Host Machine
+Ensure NFS is set up with the BBG. Then, on the host:
+`cd target/src`
+`make`
+
+Running the App on the BeagleBone
+Navigate to the exported NFS myApp folder. Then:
+`./a.out`
