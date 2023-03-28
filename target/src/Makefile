@@ -133,8 +133,3 @@ else
 	rm -f $(CCOBJECTS)
 	rm -f $(CXXOBJECTS)
 endif
-
-# clean:
-# 	rm -f $(OUT_DIR)/a.out
-# 	rm -f *.o *.s *.out
-
