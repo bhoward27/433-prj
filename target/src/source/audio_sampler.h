@@ -1,3 +1,9 @@
+/*
+* audio_sampler.h
+* This module starts sampling the microphone and runs the samples through
+* ML fire alarm inference
+* 
+*/
 
 #ifndef AUDIO_SAMPLER_H
 #define AUDIO_SAMPLER_H
@@ -6,7 +12,6 @@
 #include <mutex>
 #include <queue>
 
-#include "microphone.h"
 #include "shutdown_manager.h"
 
 #define AUDIO_READ_BUFFER_SIZE 100
@@ -14,7 +19,6 @@
 
 class AudioSampler {
     private:
-        Microphone mic;
         std::thread thread;
         std::mutex lock;
         ShutdownManager* shutdownManager = nullptr;
@@ -24,14 +28,12 @@ class AudioSampler {
 
         void audioClassifier();
 
-        // int getSound(size_t offset, size_t length, float *out_ptr);
-
     public:
         /**
-         * Start a thread that samples the current temperature with a frequency of sampleRateHz. The thread also
-         * does simple window averaging for the last windowSize samples.
+         * Start a thread that samples the microphone. The thread also
+         * runs the samples through a fire alarm ML inference model.
          *
-         * @param shutdownManager a pointer to the program's ShutdownManager, which will control when the HeatSampler's
+         * @param shutdownManager a pointer to the program's ShutdownManager, which will control when the AudioSampler's
          * thread stops.
          */
         AudioSampler(ShutdownManager* shutdownManager);

@@ -4,8 +4,8 @@
 #include <exception>
 #include <string>
 #include "utils.h"
+#include <alsa/asoundlib.h>
 
-#include "audioMixer.h"
 #include "edge-impulse-sdk/classifier/ei_run_classifier.h"
 
 #define AUDIO_BUFFER_SIZE EI_CLASSIFIER_SLICE_SIZE
@@ -22,15 +22,12 @@ AudioSampler::AudioSampler(ShutdownManager* shutdownManager)
 
     this->shutdownManager = shutdownManager;
 
-    // AudioMixer_init();
-
     thread = std::thread([this] {run();});
 }
 
 void AudioSampler::waitForShutdown()
 {
     thread.join();
-    // AudioMixer_cleanup();
     run_classifier_deinit();
 }
 
@@ -49,7 +46,6 @@ void AudioSampler::audioClassifier() {
     EI_IMPULSE_ERROR res = run_classifier_continuous(&signal, &result, false, false);
     // printf("error code: %d\n", res);
     printf("%s: %f\n", result.classification[0].label, result.classification[1].value);
-    // memset(sound, 0, AUDIO_BUFFER_SIZE);
     lock.unlock();
 }
 
