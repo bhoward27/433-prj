@@ -10,7 +10,6 @@ host contains all files relevant to code which runs on the host (Debian PC/VM).
 
 
 ## Dependencies
-(It is assumed that the gcc cross-compiler and binutils have already been installed (as any students would have done for assignment 1).)
 You will need the g++ cross-compiler to build the code in target/src. To install it, run this command on your host:
 `sudo apt install g++-arm-linux-gnueabihf`
 You will also need to install some additional cross-compiled libraries that are required by Twilio SMS service: OpenSSL, zlib, and curl.
