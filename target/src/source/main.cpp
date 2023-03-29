@@ -2,6 +2,7 @@
 
 #include "heat_sampler.h"
 #include "audio_sampler.h"
+#include "udpServer.h"
 
 int main() {
     std::cout << "Hello BeagleBone!\n";
@@ -17,7 +18,9 @@ int main() {
 
     // heatSampler.waitForShutdown();
     AudioSampler audioSampler(&shutdownManager);
-
+    UdpServer_initialize();
+    
+    UdpServer_cleanup();
     audioSampler.waitForShutdown();
 
     return 0;
