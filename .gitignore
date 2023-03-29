@@ -34,5 +34,5 @@
 *.app
 
 # Specific files and folders
-target/src/twilio/config.h
+target/src/source/twilio/config.h
 .vscode
