@@ -11,7 +11,7 @@ NAME = app
 BUILD_PATH = $(OUT_DIR)
 
 # Location of main.cpp (must use C++ compiler for main)
-CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/microphone.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp source/
+CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/microphone.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp source/capture.c source/webcam.cpp source/pwm.cpp
 
 
 # Search path for header files (current directory)
