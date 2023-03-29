@@ -16,7 +16,7 @@ You will also need to install some additional cross-compiled libraries that are 
 These must be installed to /usr/arm-linux-gnueabihf on your host. Run the following command on your host to do so:
 `./installTwilioDependencies.sh`
 Note: when the above script is downloading source code, it may fail to connect several times. This is normal, just wait and eventually it should succeed.
-If the file `target/src/twilio/config.h` is not present, ask for the file from a team member.
+If the file `target/src/source/twilio/config.h` is not present, ask for the file from a team member.
 Regardless, please change the `toPhoneNumber` constant in that file to your own personal phone number (add +1 in front for Canadian numbers).
 
 ## Hardware Setup
