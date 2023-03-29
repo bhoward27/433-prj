@@ -17,6 +17,10 @@ void PWM::waitForShutdown() {
 void PWM::writeToFile(std::string filename, std::string content) {
     std::ofstream file;
     file.open(filename);
+    if (!file.is_open()) {
+        std::cout << "Could not open file " << filename << std::endl;
+        return;
+    }
     file << content;
     file.close();
 }
