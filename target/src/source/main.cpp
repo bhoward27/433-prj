@@ -2,6 +2,8 @@
 
 #include "heat_sampler.h"
 #include "audio_sampler.h"
+#include "webcam.h"
+#include "pwm.h"
 #include "udpServer.h"
 
 int main() {
@@ -14,14 +16,13 @@ int main() {
     // Construct like this instead if you want the sampler to not print anything:
     // HeatSampler heatSampler(&shutdownManager, 1, 10);
 
-
-
     // heatSampler.waitForShutdown();
     AudioSampler audioSampler(&shutdownManager);
     UdpServer_initialize();
-    
+    Webcam webcam(&shutdownManager);
+    PWM pwm(&shutdownManager);
+    webcam.waitForShutdown();
+    pwm.waitForShutdown();
     UdpServer_cleanup();
     audioSampler.waitForShutdown();
-
-    return 0;
 }

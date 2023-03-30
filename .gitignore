@@ -32,6 +32,9 @@
 *.exe
 *.out
 *.app
+.vscode
+target/src/.vscode
+
 
 # Other unwanted file types
 *.DS_Store
