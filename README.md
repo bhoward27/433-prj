@@ -10,8 +10,8 @@ host contains all files relevant to code which runs on the host (Debian PC/VM).
 
 
 ## Dependencies
-You will need the g++ cross-compiler to build the code in target/src. To install it, run this command on your host:
-`sudo apt install g++-arm-linux-gnueabihf`
+You will need the g++ cross-compiler to build the code in target/src. To install it (and some additional libraries required by the webcam), run this command on your host:
+`sudo apt install g++-arm-linux-gnueabihf ffmpeg v4l-utils libv4l-dev`
 You will also need to install some additional cross-compiled libraries that are required by Twilio SMS service: OpenSSL, zlib, and curl.
 These must be installed to /usr/arm-linux-gnueabihf on your host. Run the following command on your host to do so:
 `./installTwilioDependencies.sh`
@@ -21,6 +21,8 @@ Regardless, please change the `toPhoneNumber` constant in that file to your own 
 
 ## Hardware Setup
 To get temperature readings, the TMP36 temperature sensor must be wired up to the BeagleBone with a voltage divider setup, with the sensor's Vout connected to AIN2 on the ADC. Ask Ben if you don't know how to wire it up.
+
+For webcam Pan and Tilt, use the P9_21 pin for the servo's PWM connection on bottom servo motor. The rest of the setup is in this student guide: https://opencoursehub.cs.sfu.ca/bfraser/grav-cms/cmpt433/links/files/2022-student-howtos-ensc351/ServoPanTiltGuide.pdf The student guide uses both servo motors, but we only use the bottom one, so only the setup for Servo 1 is required.
 
 To get microphone readings, the MAX9814 microphone must be wired with VDD to 3.3v power, GND to ground, and OUT to AIN4(pin 33)
 Before using the microphone after each reboot, the user must run startMic.sh

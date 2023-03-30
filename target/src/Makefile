@@ -6,6 +6,7 @@ SSLDIR = /usr/arm-linux-gnueabihf/openssl
 ZDIR = /usr/arm-linux-gnueabihf/zlib
 CURLDIR = /usr/arm-linux-gnueabihf/curl
 
+NODE_COPY_PATH = $(OUT_DIR)/server-copy
 # Tool macros
 CC = arm-linux-gnueabihf-gcc
 CXX = arm-linux-gnueabihf-g++
@@ -15,7 +16,7 @@ NAME = app
 BUILD_PATH = $(OUT_DIR)
 
 # Location of main.cpp (must use C++ compiler for main)
-CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp source/sms.cpp source/notifier.cpp source/twilio/twilio.cpp
+CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp source/udpServer.cpp source/waterLevelSensor.cpp source/capture.cpp source/webcam.cpp source/pwm.cpp source/sms.cpp source/notifier.cpp source/twilio/twilio.cpp
 
 
 # Search path for header files

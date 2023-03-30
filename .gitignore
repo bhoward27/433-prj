@@ -36,3 +36,8 @@
 # Specific files and folders
 target/src/source/twilio/config.h
 .vscode
+target/src/.vscode
+
+
+# Other unwanted file types
+*.DS_Store
