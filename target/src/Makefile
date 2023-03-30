@@ -1,7 +1,7 @@
 # Makefile from edge-impulse example Makefile
 
 OUT_DIR = $(HOME)/cmpt433/public/myApps
-
+NODE_COPY_PATH = $(OUT_DIR)/server-copy
 # Tool macros
 CC = arm-linux-gnueabihf-gcc
 CXX = arm-linux-gnueabihf-g++
@@ -11,7 +11,7 @@ NAME = app
 BUILD_PATH = $(OUT_DIR)
 
 # Location of main.cpp (must use C++ compiler for main)
-CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/microphone.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp
+CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp source/udpServer.cpp source/waterLevelSensor.cpp
 
 
 # Search path for header files (current directory)
@@ -44,7 +44,7 @@ CSOURCES += $(wildcard edge-impulse-sdk/CMSIS/DSP/Source/TransformFunctions/*.c)
 			$(wildcard edge-impulse-sdk/CMSIS/DSP/Source/SupportFunctions/*.c) \
 			$(wildcard edge-impulse-sdk/CMSIS/DSP/Source/MatrixFunctions/*.c) \
 			$(wildcard edge-impulse-sdk/CMSIS/DSP/Source/StatisticsFunctions/*.c)
-CSOURCES += source/audioMixer.c
+# CSOURCES += source/audioMixer.c
 
 # Include C++ source code for required libraries
 CXXSOURCES += 	$(wildcard tflite-model/*.cpp) \
@@ -98,7 +98,7 @@ CCOBJECTS := $(patsubst %.cc,%.o,$(CCSOURCES))
 
 # Default rule
 .PHONY: all
-all: app
+all: app 
 
 # Compile library source code into object files
 $(COBJECTS) : %.o : %.c

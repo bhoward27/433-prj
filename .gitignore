@@ -32,3 +32,6 @@
 *.exe
 *.out
 *.app
+
+# Other unwanted file types
+*.DS_Store
