@@ -19,7 +19,7 @@ int main() {
     // heatSampler.waitForShutdown();
     AudioSampler audioSampler(&shutdownManager);
     UdpServer_initialize();
-        Webcam webcam(&shutdownManager);
+    Webcam webcam(&shutdownManager);
     PWM pwm(&shutdownManager);
     webcam.waitForShutdown();
     pwm.waitForShutdown();

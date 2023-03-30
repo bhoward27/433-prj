@@ -11,7 +11,7 @@ NAME = app
 BUILD_PATH = $(OUT_DIR)
 
 # Location of main.cpp (must use C++ compiler for main)
-CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp source/udpServer.cpp source/waterLevelSensor.cpp source/capture.c source/webcam.cpp source/pwm.cpp
+CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp source/udpServer.cpp source/waterLevelSensor.cpp source/capture.cpp source/webcam.cpp source/pwm.cpp
 
 
 # Search path for header files (current directory)
@@ -33,7 +33,7 @@ LDFLAGS += -lm 						# Link to math.h
 LDFLAGS += -lstdc++					# Link to stdc++.h
 LDFLAGS += -lasound
 LDFLAGS += -pthread
-LDFLAGS += -L$(HOME)/cmpt433/public/asound_lib_BBB 
+LDFLAGS += -L$(HOME)/cmpt433/public/asound_lib_BBB
 
 # Include C source code for required libraries
 CSOURCES += $(wildcard edge-impulse-sdk/CMSIS/DSP/Source/TransformFunctions/*.c) \
@@ -98,7 +98,7 @@ CCOBJECTS := $(patsubst %.cc,%.o,$(CCSOURCES))
 
 # Default rule
 .PHONY: all
-all: app 
+all: app
 
 # Compile library source code into object files
 $(COBJECTS) : %.o : %.c
