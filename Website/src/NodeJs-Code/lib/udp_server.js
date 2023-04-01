@@ -6,6 +6,7 @@
 
 var socketio = require('socket.io');
 var io;
+const child = require('child_process');
 
 var dgram = require('dgram');
 
@@ -16,6 +17,37 @@ exports.listen = function(server) {
 	io.sockets.on('connection', function(socket) {
 		handleCommand(socket);
 	});
+    io.on('connection', (socket) => {
+    
+        let ffmpeg = child.spawn('ffmpeg', [
+            "-re",
+            "-y",
+            "-i",
+            "udp://192.168.7.2:1234",
+            "-preset",
+            "ultrafast",
+            "-f",
+            "mjpeg",
+            "pipe:1"
+        ]);
+    
+        ffmpeg.on('error', (err) => {
+            console.log(err);
+            throw err;
+        });
+    
+        ffmpeg.on('close', (code) => {
+        });
+    
+        ffmpeg.stderr.on('data', (data) => {
+    
+        });
+    
+        ffmpeg.stdout.on('data', (data) => {
+            var frame = Buffer.from(data).toString('base64');
+            io.sockets.emit('canvas', frame);
+        });
+    });
 };
 
 function handleCommand(socket) {

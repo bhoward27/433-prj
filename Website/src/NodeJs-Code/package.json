@@ -1,9 +1,18 @@
 {
-	"name": "nodejs-code",
-	"version": "0.0.1",
-	"description": "NodeJs code for A3",
-	"dependencies": {
-		"mime": "~1.2.7",
-		"socket.io": "^0.9.19"
-	}
+  "name": "nodejs-code",
+  "version": "0.0.1",
+  "description": "NodeJs code for A3",
+  "dependencies": {
+    "mime": "~1.2.7",
+    "socket.io": "^0.9.19"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "main": "server.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "author": "",
+  "license": "ISC"
 }

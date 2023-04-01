@@ -80,7 +80,7 @@ void openConnectionT()
     bind(socketDescriptorT, (struct sockaddr *)&sinT, sizeof(sinT));
     sinRemoteT.sin_family = AF_INET;
     sinRemoteT.sin_port = htons(RPORT_T);
-    sinRemoteT.sin_addr.s_addr = inet_addr("192.168.7.1");
+    sinRemoteT.sin_addr.s_addr = inet_addr("192.168.7.2");
 }
 
 int sendResponseT(const void *str, int size)
@@ -518,7 +518,7 @@ void init_device(void)
     fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     if (force_format) {
         if (force_format == 2) {
-            fmt.fmt.pix.width = 1280;
+            fmt.fmt.pix.width = 720;
             fmt.fmt.pix.height = 720;
             fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
             fmt.fmt.pix.field = V4L2_FIELD_NONE;
