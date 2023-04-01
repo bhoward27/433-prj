@@ -17,12 +17,12 @@ int main() {
     // HeatSampler heatSampler(&shutdownManager, 1, 10);
 
     // heatSampler.waitForShutdown();
-    AudioSampler audioSampler(&shutdownManager);
+    // AudioSampler audioSampler(&shutdownManager);
     UdpServer_initialize();
     Webcam webcam(&shutdownManager);
-    PWM pwm(&shutdownManager);
+    // PWM pwm(&shutdownManager);
     webcam.waitForShutdown();
-    pwm.waitForShutdown();
+    // pwm.waitForShutdown();
     UdpServer_cleanup();
-    audioSampler.waitForShutdown();
+    // audioSampler.waitForShutdown();
 }

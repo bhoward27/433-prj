@@ -25,7 +25,9 @@ exports.listen = function(server) {
             "-i",
             "udp://192.168.7.2:1234",
             "-preset",
-            "ultrafast",
+            "veryfast",
+            "-r",
+            "5",
             "-f",
             "mjpeg",
             "pipe:1"
