@@ -39,3 +39,4 @@ target/src/.vscode
 # Other unwanted file types
 *.DS_Store
 Website/src/NodeJs-Code/node_modules
+target/src/source/twilio/config.h
