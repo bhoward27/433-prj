@@ -32,6 +32,9 @@
 *.exe
 *.out
 *.app
+
+# Specific files and folders
+target/src/source/twilio/config.h
 .vscode
 target/src/.vscode
 

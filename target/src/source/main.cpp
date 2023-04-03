@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "shutdown_manager.h"
+#include "notifier.h"
 #include "heat_sampler.h"
 #include "audio_sampler.h"
 #include "webcam.h"
@@ -10,19 +12,18 @@ int main() {
     std::cout << "Hello BeagleBone!\n";
 
     ShutdownManager shutdownManager;
+    Notifier notifier(&shutdownManager, true);
 
     // Sample the temperature at 1 Hz and calculate window average over the last 10 samples.
-    // HeatSampler heatSampler(&shutdownManager, 1, 10, true);
-    // Construct like this instead if you want the sampler to not print anything:
-    // HeatSampler heatSampler(&shutdownManager, 1, 10);
+    HeatSampler heatSampler(&shutdownManager, &notifier, 1, 10, true);
 
-    // heatSampler.waitForShutdown();
-    // AudioSampler audioSampler(&shutdownManager);
+    AudioSampler audioSampler(&shutdownManager);
     UdpServer_initialize();
     Webcam webcam(&shutdownManager);
-    // PWM pwm(&shutdownManager);
+    PWM pwm(&shutdownManager);
+
     webcam.waitForShutdown();
-    // pwm.waitForShutdown();
+    pwm.waitForShutdown();
     UdpServer_cleanup();
-    // audioSampler.waitForShutdown();
+    audioSampler.waitForShutdown();
 }

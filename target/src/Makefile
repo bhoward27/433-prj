@@ -1,6 +1,11 @@
 # Makefile from edge-impulse example Makefile
 
 OUT_DIR = $(HOME)/cmpt433/public/myApps
+
+SSLDIR = /usr/arm-linux-gnueabihf/openssl
+ZDIR = /usr/arm-linux-gnueabihf/zlib
+CURLDIR = /usr/arm-linux-gnueabihf/curl
+
 NODE_COPY_PATH = $(OUT_DIR)/server-copy
 # Tool macros
 CC = arm-linux-gnueabihf-gcc
@@ -11,16 +16,18 @@ NAME = app
 BUILD_PATH = $(OUT_DIR)
 
 # Location of main.cpp (must use C++ compiler for main)
-CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp source/udpServer.cpp source/waterLevelSensor.cpp source/capture.cpp source/webcam.cpp source/pwm.cpp
+CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp source/udpServer.cpp source/waterLevelSensor.cpp source/capture.cpp source/webcam.cpp source/pwm.cpp source/sms.cpp source/notifier.cpp source/twilio/twilio.cpp
 
 
-# Search path for header files (current directory)
-CFLAGS += -I.
+# Search path for header files
+CFLAGS += -I. # current directory
+CFLAGS += -I$(CURLDIR)/include -I$(SSLDIR)/include -I$(ZDIR)/include
 
 # C and C++ Compiler flags
 CFLAGS += -Wall						# Include all warnings
+CFLAGS += -Werror
 CFLAGS += -g						# Generate GDB debugger information
-CFLAGS += -Wno-strict-aliasing		# Disable warnings about strict aliasing
+CFLAGS += -Wno-error=strict-aliasing -Wno-error=unused-variable -Wno-error=nonnull-compare -Wno-error=deprecated-declarations -Wno-error=sign-compare
 CFLAGS += -Os						# Optimize for size
 CFLAGS += -DNDEBUG					# Disable assert() macro
 CFLAGS += -DEI_CLASSIFIER_ENABLE_DETECTION_POSTPROCESS_OP	# Add TFLite_Detection_PostProcess operation
@@ -33,7 +40,9 @@ LDFLAGS += -lm 						# Link to math.h
 LDFLAGS += -lstdc++					# Link to stdc++.h
 LDFLAGS += -lasound
 LDFLAGS += -pthread
+LDFLAGS += -lcurl
 LDFLAGS += -L$(HOME)/cmpt433/public/asound_lib_BBB
+LDFLAGS += -L$(CURLDIR)/lib -Wl,-rpath -Wl,$(CURLDIR)/lib -L$(SSLDIR)/lib -Wl,-rpath -Wl,$(SSLDIR)/lib -L$(ZDIR)/lib -Wl,-rpath -Wl,$(ZDIR)/lib
 
 # Include C source code for required libraries
 CSOURCES += $(wildcard edge-impulse-sdk/CMSIS/DSP/Source/TransformFunctions/*.c) \
@@ -44,7 +53,6 @@ CSOURCES += $(wildcard edge-impulse-sdk/CMSIS/DSP/Source/TransformFunctions/*.c)
 			$(wildcard edge-impulse-sdk/CMSIS/DSP/Source/SupportFunctions/*.c) \
 			$(wildcard edge-impulse-sdk/CMSIS/DSP/Source/MatrixFunctions/*.c) \
 			$(wildcard edge-impulse-sdk/CMSIS/DSP/Source/StatisticsFunctions/*.c)
-# CSOURCES += source/audioMixer.c
 
 # Include C++ source code for required libraries
 CXXSOURCES += 	$(wildcard tflite-model/*.cpp) \
