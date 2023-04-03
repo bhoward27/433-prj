@@ -35,7 +35,7 @@
 
 #include "webcam.h"
 
-#define PORT_T 3000
+#define PORT_T 8042
 #define RPORT_T 1234  // Port for NodeJS
 static struct sockaddr_in sinT;
 static struct sockaddr_in sinRemoteT;
@@ -518,7 +518,7 @@ void init_device(void)
     fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     if (force_format) {
         if (force_format == 2) {
-            fmt.fmt.pix.width = 1280;
+            fmt.fmt.pix.width = 720;
             fmt.fmt.pix.height = 720;
             fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
             fmt.fmt.pix.field = V4L2_FIELD_NONE;
