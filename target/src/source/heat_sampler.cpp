@@ -2,11 +2,12 @@
 
 #include <iostream>
 #include <exception>
-#include <string>
+#include <sstream>
+#include <iomanip>
 
 #include "utils.h"
 
-HeatSampler::HeatSampler(ShutdownManager* shutdownManager, int sampleRateHz, int windowSize, bool printUpdates)
+HeatSampler::HeatSampler(ShutdownManager* shutdownManager, Notifier* notifier, int sampleRateHz, int windowSize, bool printUpdates)
 {
     if (sampleRateHz <= 0) {
         throw std::invalid_argument(
@@ -19,10 +20,14 @@ HeatSampler::HeatSampler(ShutdownManager* shutdownManager, int sampleRateHz, int
         );
     }
     if (shutdownManager == nullptr) {
-        std::invalid_argument("shutdownManager = nullptr");
+        throw std::invalid_argument("shutdownManager = nullptr");
+    }
+    if (notifier == nullptr) {
+        throw std::invalid_argument("notifier = nullptr");
     }
 
     this->shutdownManager = shutdownManager;
+    this->notifier = notifier;
     this->sampleRateHz = sampleRateHz;
     this->windowSize = windowSize;
     this->printUpdates = printUpdates;
@@ -42,8 +47,10 @@ void HeatSampler::run()
         {
             sum += sample;
             samples.push(sample);
+            double meanTemp = _getMeanTemperature();
+            checkForExtremeTemp(meanTemp);
             if (printUpdates) {
-                _printUpdate(sample);
+                _printUpdate(sample, meanTemp);
             }
         }
         lock.unlock();
@@ -63,8 +70,10 @@ void HeatSampler::run()
 
             samples.push(newSample);
             sum = sum + newSample - oldestSample;
+            double meanTemp = _getMeanTemperature();
+            checkForExtremeTemp(meanTemp);
             if (printUpdates) {
-                _printUpdate(newSample);
+                _printUpdate(newSample, meanTemp);
             }
         }
         lock.unlock();
@@ -73,7 +82,7 @@ void HeatSampler::run()
     }
 }
 
-void HeatSampler::waitForShutdown()
+HeatSampler::~HeatSampler()
 {
     thread.join();
 }
@@ -109,9 +118,33 @@ double HeatSampler::_getMeanTemperature()
     return sum / samples.size();
 }
 
-void HeatSampler::_printUpdate(double newSample)
+void HeatSampler::checkForExtremeTemp(double temperature)
 {
-    double avgTemp = _getMeanTemperature();
+    if (temperature <= extremeCold) {
+        std::stringstream message;
+        message << "Temperature is " << std::fixed << std::setprecision(1) << temperature << degreesCSymbol
+                << ", which is colder than " << extremeCold << degreesCSymbol << "!";
+        notifier->raiseEvent(Event::extremeCold, message.str());
+    } else if (temperature >= extremeCold + hysteresis) {
+        std::stringstream message;
+        message << "Warmed up to " << std::fixed << std::setprecision(1) << temperature << degreesCSymbol << ".";
+        notifier->clearEvent(Event::extremeCold, message.str());
+    }
+
+    if (temperature >= extremeHeat) {
+        std::stringstream message;
+        message << "Temperature is " << std::fixed << std::setprecision(1) << temperature << degreesCSymbol
+                << ", which is hotter than " << extremeHeat << degreesCSymbol << "!";
+        notifier->raiseEvent(Event::extremeHeat, message.str());
+    } else if (temperature <= extremeHeat - hysteresis) {
+        std::stringstream message;
+        message << "Cooled down to " << std::fixed << std::setprecision(1) << temperature << degreesCSymbol << ".";
+        notifier->clearEvent(Event::extremeHeat, message.str());
+    }
+}
+
+void HeatSampler::_printUpdate(double newSample, double avgTemp)
+{
     int currentWindowSize = samples.size();
     double windowPeriodMs = samplePeriodMs * currentWindowSize;
     std::cout << "**** HeatSampler ****\n"
