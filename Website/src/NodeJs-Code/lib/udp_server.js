@@ -23,11 +23,9 @@ exports.listen = function(server) {
             "-re",
             "-y",
             "-i",
-            "udp://192.168.7.2:1234",
+            "udp://192.168.7.1:1234",
             "-preset",
             "veryfast",
-            "-r",
-            "5",
             "-f",
             "mjpeg",
             "pipe:1"
@@ -59,7 +57,7 @@ function handleCommand(socket) {
 
 		// Info for connecting to the local process via UDP
 		var PORT = 12345;
-		var HOST = '127.0.0.1';
+		var HOST = '192.168.7.2';
 		var buffer = new Buffer(data);
 
 		var client = dgram.createSocket('udp4');
