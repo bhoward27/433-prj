@@ -45,9 +45,9 @@ void PWM::disablePWM() {
 }
 
 bool moveLeft() {
-    if (!(currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION < DUTY_MIN)) {
-        printf("moving left");
-        setDutyCycle(currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION);
+    if (!(currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION > DUTY_MAX)) {
+        printf("moving right");
+        setDutyCycle(currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION);
         sleepForMs(500);
         return true;
     }
@@ -58,9 +58,9 @@ bool moveLeft() {
 }
 
 bool moveRight() {
-    if (!(currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION > DUTY_MAX)) {
-        printf("moving right");
-        setDutyCycle(currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION);
+    if (!(currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION < DUTY_MIN)) {
+        printf("moving left");
+        setDutyCycle(currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION);
         sleepForMs(500);
         return true;
     }
