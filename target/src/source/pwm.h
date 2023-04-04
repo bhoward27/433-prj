@@ -10,11 +10,11 @@
 // period is 20ms
 #define PERIOD_NS 20000000
 
-// duty cycle is 1ms to 2ms
+// duty cycle is 0.5ms to 2.5ms
 #define DUTY_MIN 500000
 #define DUTY_MAX 2500000
 
-// change the duty cycle by 0.5ms
+// change the duty cycle by 0.25ms
 #define DUTY_CYCLE_CHANGE_DIRECTION 250000
 
 class PWM {
