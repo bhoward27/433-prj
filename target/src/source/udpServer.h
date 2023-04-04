@@ -7,11 +7,18 @@
 #define UDP_SERVER_H
 
 #include <pthread.h>
+#include <string>
+#include "shutdown_manager.h"
+#include "heat_sampler.h"
+#include "notifier.h"
 
 // Initializes the udpServer and allows it to take commands
-void UdpServer_initialize();
+void UdpServer_initialize(ShutdownManager* shutdownManagerArg, HeatSampler* heatSamplerArg, Notifier* notifierArg);
 
 // Cleans up and closes the udpServer
 void UdpServer_cleanup(void);
+
+// Queue an alert to be sent to the web server.
+void UpdServer_queueAlert(std::string alert);
 
 #endif
