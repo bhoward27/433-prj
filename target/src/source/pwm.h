@@ -11,12 +11,11 @@
 #define PERIOD_NS 20000000
 
 // duty cycle is 1ms to 2ms
-#define DUTY_CYCLE_0 1000000
-#define DUTY_CYCLE_90 1500000
-#define DUTY_CYCLE_180 2000000
+#define DUTY_MIN 500000
+#define DUTY_MAX 2500000
 
 // change the duty cycle by 0.5ms
-#define DUTY_CYCLE_CHANGE_DIRECTION 500000
+#define DUTY_CYCLE_CHANGE_DIRECTION 250000
 
 class PWM {
     private:
@@ -29,12 +28,6 @@ class PWM {
         void setPeriod(int period);
         // Set the duty cycle of the PWM signal
         void setDutyCycle(int dutyCycle);
-        // Enable or disable the PWM signal
-        void enablePWM();
-        void disablePWM();
-        // Move the servo left or right
-        void moveLeft();
-        void moveRight();
         ShutdownManager *shutdownManager = nullptr;
 
     public:
@@ -42,6 +35,12 @@ class PWM {
         PWM(ShutdownManager *shutdownManager);
         // Wait for shutdown, joins the thread
         void waitForShutdown();
+        // Enable or disable the PWM signal
+        void enablePWM();
+        void disablePWM();
+        // Move the servo left or right
+        void moveLeft();
+        void moveRight();
 };
 
 #endif
