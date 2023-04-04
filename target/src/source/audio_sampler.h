@@ -27,6 +27,7 @@ class AudioSampler {
         void run();
 
         void audioClassifier();
+        void writeToFile(std::string filename, std::string content);
 
     public:
         /**

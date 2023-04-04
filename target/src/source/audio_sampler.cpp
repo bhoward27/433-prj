@@ -5,13 +5,15 @@
 #include <string>
 #include "utils.h"
 #include <alsa/asoundlib.h>
+#include "lock.h"
+#include <fstream>
 
 #include "edge-impulse-sdk/classifier/ei_run_classifier.h"
 
 #define AUDIO_BUFFER_SIZE EI_CLASSIFIER_SLICE_SIZE
 
 int16_t sound[AUDIO_BUFFER_SIZE];
-
+const std::string BUFFER_PATH = "/sys/bus/iio/devices/iio:device0/buffer/enable";
 
 
 AudioSampler::AudioSampler(ShutdownManager* shutdownManager)
@@ -19,7 +21,7 @@ AudioSampler::AudioSampler(ShutdownManager* shutdownManager)
     if (shutdownManager == nullptr) {
         std::invalid_argument("shutdownManager = nullptr");
     }
-
+    adc_lock.lock();
     this->shutdownManager = shutdownManager;
 
     thread = std::thread([this] {run();});
@@ -39,14 +41,23 @@ static int getSound(size_t offset, size_t length, float *out_ptr) {
 void AudioSampler::audioClassifier() {
     signal_t signal; //wrapper for raw data
     static ei_impulse_result_t result; //classifier return
-    lock.lock();
     signal.total_length = EI_CLASSIFIER_SLICE_SIZE;
     signal.get_data = &getSound;
 
     EI_IMPULSE_ERROR res = run_classifier_continuous(&signal, &result, false, false);
     // printf("error code: %d\n", res);
     printf("%s: %f\n", result.classification[0].label, result.classification[1].value);
-    lock.unlock();
+}
+
+void AudioSampler::writeToFile(std::string filename, std::string content) {
+    std::ofstream file;
+    file.open(filename);
+    if (!file.is_open()) {
+        std::cout << "Could not open file " << filename << std::endl;
+        return;
+    }
+    file << content;
+    file.close();
 }
 
 void AudioSampler::run()
@@ -68,17 +79,17 @@ void AudioSampler::run()
         
         read(fd, buffer, AUDIO_READ_BUFFER_SIZE * sizeof(uint16_t));
 
-        lock.lock();
         for(int i = 0; i < AUDIO_READ_BUFFER_SIZE; i++) {
             if(count >= AUDIO_BUFFER_SIZE) {
                 count = 0;
-                lock.unlock();
+                writeToFile(BUFFER_PATH, "0");
+                adc_lock.unlock();
                 audioClassifier();
-                lock.lock();
+                adc_lock.lock();
+                writeToFile(BUFFER_PATH, "1");
             }
             sound[count++] = buffer[i];
         }
-        lock.unlock();
         sleepForDoubleMs(AUDIO_BUFFER_SLEEP);
     }
 }

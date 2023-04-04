@@ -12,6 +12,7 @@ class Adc {
     private:
         uint8 analogInputNum;
         std::ifstream analogInputFile;
+        std::string filePath;
 
     public:
         static const uint8 maxAnalogInputNum = 7;

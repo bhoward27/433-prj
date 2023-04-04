@@ -16,7 +16,7 @@ NAME = app
 BUILD_PATH = $(OUT_DIR)
 
 # Location of main.cpp (must use C++ compiler for main)
-CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp source/udpServer.cpp source/waterLevelSensor.cpp source/capture.cpp source/webcam.cpp source/pwm.cpp source/sms.cpp source/notifier.cpp source/twilio/twilio.cpp
+CXXSOURCES = source/main.cpp source/adc.cpp source/audio_sampler.cpp source/heat_sampler.cpp source/shutdown_manager.cpp source/thermometer.cpp source/utils.cpp source/udpServer.cpp source/waterLevelSensor.cpp source/capture.cpp source/webcam.cpp source/pwm.cpp source/sms.cpp source/notifier.cpp source/twilio/twilio.cpp source/lock.cpp
 
 
 # Search path for header files
@@ -128,6 +128,10 @@ else
 	# mkdir -p $(BUILD_PATH)
 endif
 	$(CXX) $(COBJECTS) $(CXXOBJECTS) $(CCOBJECTS) -o $(BUILD_PATH)/$(NAME) $(LDFLAGS)
+
+mic:
+	sudo cp startMic.sh $(OUT_DIR)/startMic.sh
+	sudo cp stopMic.sh $(OUT_DIR)/stopMic.sh
 
 # Remove compiled object files
 .PHONY: clean
