@@ -68,7 +68,7 @@ function sendCommandViaUDP(message) {
 	socket.on('updateReply', function(result) {
 		flag = false;
 		result = result.split(' ');
-		$('#water-level').text("~"+ result[1] + " CM");
+		$('#water-level').text("~"+ result[1].toFixed(2) + " cm");
 	});
 
 	setTimeout(function () {
