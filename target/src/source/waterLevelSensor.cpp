@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include "utils.h"
+#include "lock.h"
 
 #define A2D_FILE_VOLTAGE1  "/sys/bus/iio/devices/iio:device0/in_voltage1_raw"
 #define A2D_VOLTAGE_REF_V  1.8
@@ -16,6 +17,7 @@
 
 float WaterLevelSensor_getVoltage1Reading()
 {
+	adc_lock.lock();
 	// Open file
 	FILE *f = fopen(A2D_FILE_VOLTAGE1, "r");
 	if (!f) {
@@ -37,6 +39,7 @@ float WaterLevelSensor_getVoltage1Reading()
 	if (a2dReading == 0) {
 		a2dReading++;
 	}
+	adc_lock.unlock();
 	return (a2dReading*(A2D_VOLTAGE_REF_V/A2D_MAX_READING))*2;
 }
 
