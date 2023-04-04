@@ -9,6 +9,8 @@
 #include "utils.h"
 #include "lock.h"
 
+#include "waterLevelSensor.h"
+
 #define A2D_FILE_VOLTAGE1  "/sys/bus/iio/devices/iio:device0/in_voltage1_raw"
 #define A2D_VOLTAGE_REF_V  1.8
 #define A2D_MAX_READING    4095
@@ -25,7 +27,7 @@
 #define VOLTAGE_3_5_CM 1.77
 #define VOLTAGE_4_CM 1.79
 
-float WaterLevelSensor_getVoltage1Reading()
+float WaterLevelSensor_getVoltage1Reading(Notifier* notifier)
 {
 	adc_lock.lock();
 	// Open file
@@ -52,42 +54,52 @@ float WaterLevelSensor_getVoltage1Reading()
 	adc_lock.unlock();
 	float voltageReading = a2dReading*(A2D_VOLTAGE_REF_V/A2D_MAX_READING)*2;
 
+	float distanceCm;
 	if (voltageReading < VOLTAGE_WET) {
-		return 0;
+		distanceCm = 0;
 	}
 	else if (voltageReading < VOLTAGE_0_2_CM) {
-		return 0.1;
+		distanceCm = 0.1;
 	}
 	else if (voltageReading < VOLTAGE_0_4_CM) {
-		return 0.2;
+		distanceCm = 0.2;
 	}
 	else if (voltageReading < VOLTAGE_0_5_CM) {
-		return 0.4;
+		distanceCm = 0.4;
 	}
 	else if (voltageReading < VOLTAGE_1_CM) {
-		return 0.5;
+		distanceCm = 0.5;
 	}
 	else if (voltageReading < VOLTAGE_1_5_CM) {
-		return 1;
+		distanceCm = 1;
 	}
 	else if (voltageReading < VOLTAGE_2_CM) {
-		return 1.5;
+		distanceCm = 1.5;
 	}
 	else if (voltageReading < VOLTAGE_2_5_CM) {
-		return 2;
+		distanceCm = 2;
 	}
 	else if (voltageReading < VOLTAGE_3_CM) {
-		return 2.5;
+		distanceCm = 2.5;
 	}
 	else if (voltageReading < VOLTAGE_3_5_CM) {
-		return 3;
+		distanceCm = 3;
 	}
 	else if (voltageReading < VOLTAGE_4_CM) {
-		return 3.5;
+		distanceCm = 3.5;
 	}
 	else {
-		return 4.0;
+		distanceCm = 4.0;
 	}
+
+	if (distanceCm >= 0.5) {
+		// TODO: Add better message.
+		notifier->raiseEvent(Event::flood, "");
+	} else if (distanceCm <= 0.5 - 0.1) {
+		notifier->clearEvent(Event::flood);
+	}
+
+	return distanceCm;
 }
 
 

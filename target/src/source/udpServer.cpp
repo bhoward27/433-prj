@@ -16,6 +16,7 @@
 #include "udpServer.h"
 #include "waterLevelSensor.h"
 #include "heat_sampler.h"
+#include "notifier.h"
 
 #define MSG_MAX_LEN 1500
 #define PORT        12345
@@ -28,9 +29,11 @@
 
 static pthread_t samplerId;
 static int socketDescriptor;
+static ShutdownManager* shutdownManager;
 static std::queue<std::string> alerts;
 static std::mutex alertLock;
 static HeatSampler* heatSampler;
+static Notifier* notifier;
 
 static std::string getAlerts();
 
@@ -58,6 +61,8 @@ static void *updServerThread(void *args)
 		if (strncmp(messageRx, "terminate", strlen("terminate")) == 0) {
 			char messageTx[MSG_MAX_LEN];
 			sprintf(messageTx, "Program terminating.\n");
+			shutdownManager->requestShutdown();
+			notifier->wakeUpSmsForShutdown();
 
 			sin_len = sizeof(sinRemote);
 			sendto( socketDescriptor,
@@ -69,7 +74,7 @@ static void *updServerThread(void *args)
 		else if (strncmp(messageRx, "update", strlen("update")) == 0) {
 			std::stringstream stream;
 			stream << "update "
-				   << WaterLevelSensor_getVoltage1Reading() << " "
+				   << WaterLevelSensor_getVoltage1Reading(notifier) << " "
 				   << heatSampler->getMeanTemperature() << " "
 				   << getAlerts();
 
@@ -156,9 +161,11 @@ void UpdServer_queueAlert(std::string alert)
 	alertLock.unlock();
 }
 
-void UdpServer_initialize(HeatSampler* heatSamplerArg)
+void UdpServer_initialize(ShutdownManager* shutdownManagerArg, HeatSampler* heatSamplerArg, Notifier* notifierArg)
 {
+	shutdownManager = shutdownManagerArg;
 	heatSampler = heatSamplerArg;
+	notifier = notifierArg;
 
 	// Address
 	struct sockaddr_in sin;
