@@ -106,7 +106,7 @@ CCOBJECTS := $(patsubst %.cc,%.o,$(CCSOURCES))
 
 # Default rule
 .PHONY: all
-all: app
+all: app mic
 
 # Compile library source code into object files
 $(COBJECTS) : %.o : %.c
@@ -128,6 +128,10 @@ else
 	# mkdir -p $(BUILD_PATH)
 endif
 	$(CXX) $(COBJECTS) $(CXXOBJECTS) $(CCOBJECTS) -o $(BUILD_PATH)/$(NAME) $(LDFLAGS)
+
+mic:
+	sudo cp startMic.sh $(OUT_DIR)/startMic.sh
+	sudo cp stopMic.sh $(OUT_DIR)/stopMic.sh
 
 # Remove compiled object files
 .PHONY: clean
