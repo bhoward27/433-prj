@@ -17,17 +17,21 @@
 #define AUDIO_READ_BUFFER_SIZE 100
 #define AUDIO_BUFFER_SLEEP 12
 
+#define ALARM_AVERAGE_PREVIOUS 0.80
+#define ALARM_AVERAGE_NEW 0.20
+
 class AudioSampler {
     private:
         std::thread thread;
         std::mutex lock;
         ShutdownManager* shutdownManager = nullptr;
-
+        float alarmValue;
         //start sampling microphone and running fire alarm inference
         void run();
 
         void audioClassifier();
         void writeToFile(std::string filename, std::string content);
+        void updateAverage(float newSample);
 
     public:
         /**
