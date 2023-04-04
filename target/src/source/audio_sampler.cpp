@@ -23,6 +23,7 @@ AudioSampler::AudioSampler(ShutdownManager* shutdownManager)
     }
     adc_lock.lock();
     this->shutdownManager = shutdownManager;
+    this->alarmValue = 0.0;
 
     thread = std::thread([this] {run();});
 }
@@ -46,7 +47,14 @@ void AudioSampler::audioClassifier() {
 
     EI_IMPULSE_ERROR res = run_classifier_continuous(&signal, &result, false, false);
     // printf("error code: %d\n", res);
-    printf("%s: %f\n", result.classification[0].label, result.classification[1].value);
+    updateAverage(result.classification[0].value);
+    printf("%s: %f\n", result.classification[0].label, result.classification[0].value);
+    printf("\n%f", alarmValue);
+
+}
+
+void AudioSampler::updateAverage(float newSample) {
+    alarmValue = (alarmValue * ALARM_AVERAGE_PREVIOUS) + (newSample * ALARM_AVERAGE_NEW);
 }
 
 void AudioSampler::writeToFile(std::string filename, std::string content) {
@@ -88,7 +96,7 @@ void AudioSampler::run()
                 adc_lock.lock();
                 writeToFile(BUFFER_PATH, "1");
             }
-            sound[count++] = buffer[i];
+            sound[count++] = buffer[i] * 2;
         }
         sleepForDoubleMs(AUDIO_BUFFER_SLEEP);
     }

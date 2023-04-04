@@ -17,30 +17,33 @@
 // change the duty cycle by 0.25ms
 #define DUTY_CYCLE_CHANGE_DIRECTION 250000
 
-class PWM {
-    private:
-        std::thread thread;
-        int currentDutyCycle = 0;
-        void run();
-        // Function to write to a file
-        void writeToFile(std::string filename, std::string content);
-        // Set the period of the PWM signal
-        void setPeriod(int period);
-        // Set the duty cycle of the PWM signal
-        void setDutyCycle(int dutyCycle);
-        ShutdownManager *shutdownManager = nullptr;
+// Move the servo left or right, returns true if worked, returns false if failed
+bool moveLeft();
+bool moveRight();
 
-    public:
-        // Constructor
-        PWM(ShutdownManager *shutdownManager);
-        // Wait for shutdown, joins the thread
-        void waitForShutdown();
-        // Enable or disable the PWM signal
-        void enablePWM();
-        void disablePWM();
-        // Move the servo left or right
-        void moveLeft();
-        void moveRight();
+// Set the period of the PWM signal
+void setPeriod(int period);
+// Set the duty cycle of the PWM signal
+void setDutyCycle(int dutyCycle);
+
+// Function to write to a file
+void writeToFile(std::string filename, std::string content);
+
+class PWM
+{
+private:
+    std::thread thread;
+    void run();
+    ShutdownManager *shutdownManager = nullptr;
+
+public:
+    // Constructor
+    PWM(ShutdownManager *shutdownManager);
+    // Wait for shutdown, joins the thread
+    void waitForShutdown();
+    // Enable or disable the PWM signal
+    void enablePWM();
+    void disablePWM();
 };
 
 #endif

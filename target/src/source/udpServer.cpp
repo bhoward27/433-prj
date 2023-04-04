@@ -9,7 +9,7 @@
 #include <ctype.h>
 #include <string>
 #include <exception>
-#include <queue>
+#include "pwm.h"#include <queue>
 #include <mutex>
 #include <sstream>
 
@@ -90,31 +90,60 @@ static void *updServerThread(void *args)
 		else if (strncmp(messageRx, "panLeft", strlen("panLeft")) == 0) {
 			// Insert panning right code here
 			// Send message "stop panning" if the user has gone over the min or max pan
-			char str[1024];
-			sprintf(str, "panning left");
-			char messageTx[MSG_MAX_LEN];
-			sprintf(messageTx, "%s", str);
+			if (moveLeft()) {
+				char str[1024];
+				sprintf(str, "panning left");
+				char messageTx[MSG_MAX_LEN];
+				sprintf(messageTx, "%s", str);
 
-			sin_len = sizeof(sinRemote);
-			sendto( socketDescriptor,
-				messageTx, strlen(messageTx),
-				0,
-				(struct sockaddr *) &sinRemote, sin_len);
+				sin_len = sizeof(sinRemote);
+				sendto( socketDescriptor,
+					messageTx, strlen(messageTx),
+					0,
+					(struct sockaddr *) &sinRemote, sin_len);
+			}
+			else {
+				char str[1024];
+				sprintf(str, "stop panning");
+				char messageTx[MSG_MAX_LEN];
+				sprintf(messageTx, "%s", str);
+
+				sin_len = sizeof(sinRemote);
+				sendto( socketDescriptor,
+					messageTx, strlen(messageTx),
+					0,
+					(struct sockaddr *) &sinRemote, sin_len);
+			}
 
 		}
 		else if (strncmp(messageRx, "panRight", strlen("panRight")) == 0) {
 			// Insert panning right code here
 			// Send message "stop panning" if the user has gone over the min or max pan
-			char str[1024];
-			sprintf(str, "panning right");
-			char messageTx[MSG_MAX_LEN];
-			sprintf(messageTx, "%s", str);
+			moveRight();
+			if (moveRight()) {
+				char str[1024];
+				sprintf(str, "panning right");
+				char messageTx[MSG_MAX_LEN];
+				sprintf(messageTx, "%s", str);
 
-			sin_len = sizeof(sinRemote);
-			sendto( socketDescriptor,
-				messageTx, strlen(messageTx),
-				0,
-				(struct sockaddr *) &sinRemote, sin_len);
+				sin_len = sizeof(sinRemote);
+				sendto( socketDescriptor,
+					messageTx, strlen(messageTx),
+					0,
+					(struct sockaddr *) &sinRemote, sin_len);
+			}
+			else {
+				char str[1024];
+				sprintf(str, "stop panning");
+				char messageTx[MSG_MAX_LEN];
+				sprintf(messageTx, "%s", str);
+
+				sin_len = sizeof(sinRemote);
+				sendto( socketDescriptor,
+					messageTx, strlen(messageTx),
+					0,
+					(struct sockaddr *) &sinRemote, sin_len);
+			}
 
 		}
 		else {
