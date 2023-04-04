@@ -43,21 +43,17 @@ void PWM::disablePWM() {
 }
 
 void PWM::moveLeft() {
-    if (this->currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION < DUTY_CYCLE_0) {
-        setDutyCycle(DUTY_CYCLE_0);
-    } else {
+    if (!(this->currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION < DUTY_MIN)) {
         setDutyCycle(this->currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION);
     }
-    sleepForMs(1500);
+    sleepForMs(500);
 }
 
 void PWM::moveRight() {
-    if (this->currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION > DUTY_CYCLE_180) {
-        setDutyCycle(DUTY_CYCLE_180);
-    } else {
+    if (!(this->currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION > DUTY_MAX)) {
         setDutyCycle(this->currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION);
     }
-    sleepForMs(1500);
+    sleepForMs(500);
 }
 
 void PWM::run() {

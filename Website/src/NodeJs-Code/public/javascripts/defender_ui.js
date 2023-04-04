@@ -15,6 +15,14 @@ $(document).ready(function() {
 		sendCommandViaUDP("terminate");
 	});
 
+	$('#panLeft').click(function(){
+		sendCommandViaUDP("panLeft");
+	});
+
+	$('#panRight').click(function(){
+		sendCommandViaUDP("panRight");
+	});
+
 	socket.on('bbgNotRunning', function(result) {
 		if ($('#error-box').is(":hidden")) {
 			var newDiv = $('<code></code>')
@@ -29,6 +37,10 @@ $(document).ready(function() {
 		if ($('#error-box').is(":visible")) {
 			$('#error-box').hide();
 		}
+	});
+
+	socket.on('stopPanning', function(result) {
+		alert("You have gone the maximum distance left or right");
 	});
 });
 
@@ -56,7 +68,7 @@ function sendCommandViaUDP(message) {
 	socket.on('updateReply', function(result) {
 		flag = false;
 		result = result.split(' ');
-		$('#water-level').text(result[1]);
+		$('#water-level').text("~"+ result[1] + " CM");
 	});
 
 	setTimeout(function () {

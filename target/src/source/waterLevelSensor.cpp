@@ -13,7 +13,17 @@
 #define A2D_VOLTAGE_REF_V  1.8
 #define A2D_MAX_READING    4095
 
-
+#define VOLTAGE_WET 0.05
+#define VOLTAGE_0_2_CM 0.68
+#define VOLTAGE_0_4_CM 0.83
+#define VOLTAGE_0_5_CM 1.12
+#define VOLTAGE_1_CM 1.26
+#define VOLTAGE_1_5_CM 1.54
+#define VOLTAGE_2_CM 1.62
+#define VOLTAGE_2_5_CM 1.66
+#define VOLTAGE_3_CM 1.7
+#define VOLTAGE_3_5_CM 1.77
+#define VOLTAGE_4_CM 1.79
 
 float WaterLevelSensor_getVoltage1Reading()
 {
@@ -40,7 +50,44 @@ float WaterLevelSensor_getVoltage1Reading()
 		a2dReading++;
 	}
 	adc_lock.unlock();
-	return (a2dReading*(A2D_VOLTAGE_REF_V/A2D_MAX_READING))*2;
+	float voltageReading = a2dReading*(A2D_VOLTAGE_REF_V/A2D_MAX_READING)*2;
+
+	if (voltageReading < VOLTAGE_WET) {
+		return 0;
+	}
+	else if (voltageReading < VOLTAGE_0_2_CM) {
+		return 0.1;
+	}
+	else if (voltageReading < VOLTAGE_0_4_CM) {
+		return 0.2;
+	}
+	else if (voltageReading < VOLTAGE_0_5_CM) {
+		return 0.4;
+	}
+	else if (voltageReading < VOLTAGE_1_CM) {
+		return 0.5;
+	}
+	else if (voltageReading < VOLTAGE_1_5_CM) {
+		return 1;
+	}
+	else if (voltageReading < VOLTAGE_2_CM) {
+		return 1.5;
+	}
+	else if (voltageReading < VOLTAGE_2_5_CM) {
+		return 2;
+	}
+	else if (voltageReading < VOLTAGE_3_CM) {
+		return 2.5;
+	}
+	else if (voltageReading < VOLTAGE_3_5_CM) {
+		return 3;
+	}
+	else if (voltageReading < VOLTAGE_4_CM) {
+		return 3.5;
+	}
+	else {
+		return 4.0;
+	}
 }
 
 
