@@ -17,4 +17,7 @@ void sleepForDoubleMs(double delayInMs);
 /// Return s converted to all capital letters.
 std::string toUpper(std::string s);
 
+/// Return s converted to all lowercase letters.
+std::string toLower(std::string s);
+
 #endif

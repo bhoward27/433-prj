@@ -7,11 +7,15 @@
 #define UDP_SERVER_H
 
 #include <pthread.h>
+#include <string>
 
 // Initializes the udpServer and allows it to take commands
 void UdpServer_initialize();
 
 // Cleans up and closes the udpServer
 void UdpServer_cleanup(void);
+
+// Queue an alert to be sent to the web server.
+void UpdServer_queueAlert(std::string alert);
 
 #endif

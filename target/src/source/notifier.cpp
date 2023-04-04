@@ -6,6 +6,7 @@
 
 #include "notifier.h"
 #include "utils.h"
+#include "udpServer.h"
 
 Notifier::Notifier(ShutdownManager* shutdownManager, bool printUpdates) : sms(shutdownManager, printUpdates),
                                                                           printUpdates(printUpdates)
@@ -66,9 +67,14 @@ void Notifier::notify(Event event, bool raise, std::string messageBody)
     dateStream << std::put_time(localNow, "%b. %d, %I:%M %p");
 
     std::string smsMessage;
+    std::string udpMessage;
+    std::string udpDateSep = " --- ";
+    std::string udpAlertSuffix = "\n";
     if (raise) {
         smsMessage = smsAppHeader + toUpper(eventInfoMap[event].name) + ": " + messageBody +
                      smsDatePrefix + dateStream.str() + smsDateSuffix;
+
+        udpMessage = toLower(eventInfoMap[event].name) + " raised" + udpDateSep + dateStream.str() + udpAlertSuffix;
     }
     else {
         if (messageBody != "") {
@@ -77,9 +83,10 @@ void Notifier::notify(Event event, bool raise, std::string messageBody)
         }
         smsMessage = smsAppHeader + eventInfoMap[event].name + " Event ended." + messageBody +
                      smsDatePrefix + dateStream.str() + smsDateSuffix;
+
+        udpMessage = toLower(eventInfoMap[event].name) + " cleared" + udpDateSep + dateStream.str() + udpAlertSuffix;
     }
 
     sms.queueMessage(smsMessage);
-
-    // TODO: Send appropriate message to web server.
+    UpdServer_queueAlert(udpMessage);
 }

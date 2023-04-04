@@ -9,9 +9,13 @@
 #include <ctype.h>
 #include <string>
 #include <exception>
+#include <queue>
+#include <mutex>
+#include <sstream>
 
 #include "udpServer.h"
 #include "waterLevelSensor.h"
+#include "heat_sampler.h"
 
 #define MSG_MAX_LEN 1500
 #define PORT        12345
@@ -24,6 +28,11 @@
 
 static pthread_t samplerId;
 static int socketDescriptor;
+static std::queue<std::string> alerts;
+static std::mutex alertLock;
+static HeatSampler* heatSampler;
+
+static std::string getAlerts();
 
 static void *updServerThread(void *args)
 {
@@ -58,11 +67,14 @@ static void *updServerThread(void *args)
 			break;
 		}
 		else if (strncmp(messageRx, "update", strlen("update")) == 0) {
-			char str[1024];
-			sprintf(str, "update %f", WaterLevelSensor_getVoltage1Reading());
+			std::stringstream stream;
+			stream << "update "
+				   << WaterLevelSensor_getVoltage1Reading() << " "
+				   << heatSampler->getMeanTemperature() << " "
+				   << getAlerts();
 
 			char messageTx[MSG_MAX_LEN];
-			sprintf(messageTx, "%s", str);
+			sprintf(messageTx, "%s", stream.str().c_str());
 
 			sin_len = sizeof(sinRemote);
 			sendto( socketDescriptor,
@@ -118,8 +130,36 @@ static void *updServerThread(void *args)
 	return 0;
 }
 
-void UdpServer_initialize()
+static std::string getAlerts()
 {
+	std::string allAlerts = "";
+
+	alertLock.lock();
+	{
+		while (!alerts.empty()) {
+			std::string alert = alerts.front();
+			alerts.pop();
+			allAlerts += alert;
+		}
+	}
+	alertLock.unlock();
+
+	return allAlerts;
+}
+
+void UpdServer_queueAlert(std::string alert)
+{
+	alertLock.lock();
+	{
+		alerts.push(alert);
+	}
+	alertLock.unlock();
+}
+
+void UdpServer_initialize(HeatSampler* heatSamplerArg)
+{
+	heatSampler = heatSamplerArg;
+
 	// Address
 	struct sockaddr_in sin;
 	memset(&sin, 0, sizeof(sin));

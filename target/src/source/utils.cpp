@@ -32,3 +32,12 @@ std::string toUpper(std::string s)
 
     return s;
 }
+
+std::string toLower(std::string s)
+{
+    // CITATION: Code copied from here:
+    // https://www.geeksforgeeks.org/conversion-whole-string-uppercase-lowercase-using-stl-c/.
+    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+
+    return s;
+}
