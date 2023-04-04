@@ -2,6 +2,8 @@
 #include "string"
 #include <fstream>
 
+int currentDutyCycle = 0;
+
 // path for left/right servo
 const std::string PWM0_PATH = "/sys/class/pwm/pwmchip3/pwm0/";
 
@@ -14,7 +16,7 @@ void PWM::waitForShutdown() {
     this->thread.join();
 }
 
-void PWM::writeToFile(std::string filename, std::string content) {
+void writeToFile(std::string filename, std::string content) {
     std::ofstream file;
     file.open(filename);
     if (!file.is_open()) {
@@ -25,13 +27,13 @@ void PWM::writeToFile(std::string filename, std::string content) {
     file.close();
 }
 
-void PWM::setPeriod(int period) {
+void setPeriod(int period) {
     writeToFile(PWM0_PATH + "period", std::to_string(period));
 }
 
-void PWM::setDutyCycle(int dutyCycle) {
+void setDutyCycle(int dutyCycle) {
     writeToFile(PWM0_PATH + "duty_cycle", std::to_string(dutyCycle));
-    this->currentDutyCycle = dutyCycle;
+    currentDutyCycle = dutyCycle;
 }
 
 void PWM::enablePWM() {
@@ -42,18 +44,30 @@ void PWM::disablePWM() {
     writeToFile(PWM0_PATH + "enable", "0");
 }
 
-void PWM::moveLeft() {
-    if (!(this->currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION < DUTY_MIN)) {
-        setDutyCycle(this->currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION);
+bool moveLeft() {
+    if (!(currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION < DUTY_MIN)) {
+        printf("moving left");
+        setDutyCycle(currentDutyCycle - DUTY_CYCLE_CHANGE_DIRECTION);
+        sleepForMs(500);
+        return true;
     }
-    sleepForMs(500);
+    else {
+        printf("failed left");
+        return false;
+    }
 }
 
-void PWM::moveRight() {
-    if (!(this->currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION > DUTY_MAX)) {
-        setDutyCycle(this->currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION);
+bool moveRight() {
+    if (!(currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION > DUTY_MAX)) {
+        printf("moving right");
+        setDutyCycle(currentDutyCycle + DUTY_CYCLE_CHANGE_DIRECTION);
+        sleepForMs(500);
+        return true;
     }
-    sleepForMs(500);
+    else {
+        printf("failed right");
+        return false;
+    }
 }
 
 void PWM::run() {

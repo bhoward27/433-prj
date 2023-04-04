@@ -9,7 +9,7 @@
 #include <ctype.h>
 #include <string>
 #include <exception>
-
+#include "pwm.h"
 #include "udpServer.h"
 #include "waterLevelSensor.h"
 
@@ -73,6 +73,7 @@ static void *updServerThread(void *args)
 		else if (strncmp(messageRx, "panLeft", strlen("panLeft")) == 0) {
 			// Insert panning right code here
 			// Send message "stop panning" if the user has gone over the min or max pan
+			moveLeft();
 			char str[1024];
 			sprintf(str, "panning left");
 			char messageTx[MSG_MAX_LEN];
@@ -88,6 +89,7 @@ static void *updServerThread(void *args)
 		else if (strncmp(messageRx, "panRight", strlen("panRight")) == 0) {
 			// Insert panning right code here
 			// Send message "stop panning" if the user has gone over the min or max pan
+			moveRight();
 			char str[1024];
 			sprintf(str, "panning right");
 			char messageTx[MSG_MAX_LEN];
