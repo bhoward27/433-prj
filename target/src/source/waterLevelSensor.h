@@ -3,7 +3,9 @@
 #ifndef WATER_LEVEL_SENSOR_H
 #define WATER_LEVEL_SENSOR_H
 
+#include "notifier.h"
+
 // Function will return the voltage reading of the pot
-float WaterLevelSensor_getVoltage1Reading(void);
+float WaterLevelSensor_getVoltage1Reading(Notifier* notifier);
 
 #endif
