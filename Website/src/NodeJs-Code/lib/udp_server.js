@@ -84,6 +84,9 @@ function handleCommand(socket) {
 			} 
 			else if (reply.includes("stop panning")) {
 				socket.emit('stopPanning');
+			} 
+			else if(reply.includes("alarm")) {
+				socket.emit('alarmReply');
 			}
 			else {
 				socket.emit('commandReply', reply);

@@ -71,6 +71,12 @@ function sendCommandViaUDP(message) {
 		$('#water-level').text("~"+ result[1] + " CM");
 	});
 
+	socket.on('alarmReply', function(result) {
+		flag = false;
+		result = result.split(' ');
+		$('#alarm-level').text(result[1]);
+	});
+
 	setTimeout(function () {
 		if (flag) {
 			// Learned how to check if div is visible from this link: https://stackoverflow.com/questions/178325/how-do-i-check-if-an-element-is-hidden-in-jquery
@@ -89,4 +95,5 @@ function sendCommandViaUDP(message) {
 // https://stackoverflow.com/questions/45752698/periodically-call-node-js-function-every-second
 setInterval(function() {
 	sendCommandViaUDP("update")
+	sendCommandViaUDP("alarm")
 }, 1000);
