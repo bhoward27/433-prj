@@ -76,7 +76,7 @@ static void *updServerThread(void *args)
 			std::stringstream stream;
 			stream << "update "
 				   << WaterLevelSensor_getVoltage1Reading(notifier) << " "
-				   << heatSampler->getMeanTemperature() << "\n"
+				   << heatSampler->getMeanTemperature() << " \n"
 				   << getAlerts();
 
 			char messageTx[MSG_MAX_LEN];
