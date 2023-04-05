@@ -35,6 +35,7 @@ static std::queue<std::string> alerts;
 static std::mutex alertLock;
 static HeatSampler* heatSampler;
 static Notifier* notifier;
+static AudioSampler* audioSampler;
 
 static std::string getAlerts();
 
@@ -76,8 +77,9 @@ static void *updServerThread(void *args)
 			std::stringstream stream;
 			stream << "update "
 				   << WaterLevelSensor_getVoltage1Reading(notifier) << " "
-				   << heatSampler->getMeanTemperature() << " \n"
-				   << getAlerts();
+				   << heatSampler->getMeanTemperature() << " "
+				   << audioSampler->getAlarmValue() << " "
+				   << "\n" << getAlerts();
 
 			char messageTx[MSG_MAX_LEN];
 			sprintf(messageTx, "%s", stream.str().c_str());
@@ -191,11 +193,15 @@ void UpdServer_queueAlert(std::string alert)
 	alertLock.unlock();
 }
 
-void UdpServer_initialize(ShutdownManager* shutdownManagerArg, HeatSampler* heatSamplerArg, Notifier* notifierArg)
+void UdpServer_initialize(ShutdownManager* shutdownManagerArg,
+						  HeatSampler* heatSamplerArg,
+						  Notifier* notifierArg,
+						  AudioSampler* audioSamplerArg)
 {
 	shutdownManager = shutdownManagerArg;
 	heatSampler = heatSamplerArg;
 	notifier = notifierArg;
+	audioSampler = audioSamplerArg;
 
 	// Address
 	struct sockaddr_in sin;

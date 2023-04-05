@@ -7,6 +7,8 @@
 #include <alsa/asoundlib.h>
 #include "lock.h"
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 
 #include "edge-impulse-sdk/classifier/ei_run_classifier.h"
 
@@ -16,13 +18,14 @@ int16_t sound[AUDIO_BUFFER_SIZE];
 const std::string BUFFER_PATH = "/sys/bus/iio/devices/iio:device0/buffer/enable";
 
 
-AudioSampler::AudioSampler(ShutdownManager* shutdownManager)
+AudioSampler::AudioSampler(ShutdownManager* shutdownManager, Notifier* notifier)
 {
     if (shutdownManager == nullptr) {
         std::invalid_argument("shutdownManager = nullptr");
     }
     adc_lock.lock();
     this->shutdownManager = shutdownManager;
+    this->notifier = notifier;
     this->alarmValue = 0.0;
 
     thread = std::thread([this] {run();});
@@ -51,6 +54,18 @@ void AudioSampler::audioClassifier() {
     printf("%s: %f\n", result.classification[0].label, result.classification[0].value);
     printf("\n%f", alarmValue);
 
+    if (alarmValue >= requiredCertainty) {
+        std::stringstream stream;
+        stream << "Fire alarm detected with "
+               << std::fixed << std::setprecision(3) << alarmValue * 100 << "% certainty!";
+        notifier->raiseEvent(Event::fireAlarmDetected, stream.str());
+    }
+    else if (alarmValue <= requiredCertainty - 0.10) {
+        std::stringstream stream;
+        stream << "The chance that a fire alarm is going off has lowered to only "
+               << std::fixed << std::setprecision(3) << alarmValue * 100 << "%.";
+        notifier->clearEvent(Event::fireAlarmDetected, stream.str());
+    }
 }
 
 void AudioSampler::updateAverage(float newSample) {
@@ -84,7 +99,7 @@ void AudioSampler::run()
     // Discard old samples and add new ones to the window.
     run_classifier_init();
     while (!shutdownManager->isShutdownRequested()) {
-        
+
         read(fd, buffer, AUDIO_READ_BUFFER_SIZE * sizeof(uint16_t));
 
         for(int i = 0; i < AUDIO_READ_BUFFER_SIZE; i++) {
@@ -100,4 +115,9 @@ void AudioSampler::run()
         }
         sleepForDoubleMs(AUDIO_BUFFER_SLEEP);
     }
+}
+
+float AudioSampler::getAlarmValue()
+{
+    return alarmValue;
 }

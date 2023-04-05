@@ -8,8 +8,8 @@
 #include <pthread.h>
 #include "utils.h"
 #include "lock.h"
-
 #include "waterLevelSensor.h"
+#include <sstream>
 
 #define A2D_FILE_VOLTAGE1  "/sys/bus/iio/devices/iio:device0/in_voltage1_raw"
 #define A2D_VOLTAGE_REF_V  1.8
@@ -26,6 +26,8 @@
 #define VOLTAGE_3_CM 1.7
 #define VOLTAGE_3_5_CM 1.77
 #define VOLTAGE_4_CM 1.79
+
+#define DEPTH_THRESHOLD 0.5
 
 float WaterLevelSensor_getVoltage1Reading(Notifier* notifier)
 {
@@ -92,11 +94,14 @@ float WaterLevelSensor_getVoltage1Reading(Notifier* notifier)
 		distanceCm = 4.0;
 	}
 
-	if (distanceCm >= 0.5) {
-		// TODO: Add better message.
-		notifier->raiseEvent(Event::flood, "");
-	} else if (distanceCm <= 0.5 - 0.1) {
-		notifier->clearEvent(Event::flood);
+	if (distanceCm >= DEPTH_THRESHOLD) {
+		std::stringstream stream;
+		stream << "The liquid sensor is submerged in about " << distanceCm << " cm of liquid!";
+		notifier->raiseEvent(Event::flood, stream.str());
+	} else if (distanceCm <= DEPTH_THRESHOLD - 0.1) {
+		std::stringstream stream;
+		stream << "The liquid sensor has dried somewhat, and is submerged in " << distanceCm << " cm of liquid.";
+		notifier->clearEvent(Event::flood, stream.str());
 	}
 
 	return distanceCm;
