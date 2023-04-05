@@ -14,7 +14,7 @@ h1, h2 {
 }
 
 #status-box {
-	width: 250px;
+	width: 387.5px;
 	min-height: 200pt;
 	border: thin black solid;
 	background-color: #f3f3f3;
@@ -25,7 +25,7 @@ h1, h2 {
 
 #status-box-right {
 	overflow-y: auto;
-	width: 800px;
+	width: 775px;
 	height: 200pt;
 	border: thin black solid;
 	background-color: #f3f3f3;

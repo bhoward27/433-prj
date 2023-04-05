@@ -9,7 +9,8 @@
 #include <ctype.h>
 #include <string>
 #include <exception>
-#include "pwm.h"#include <queue>
+#include "pwm.h"
+#include <queue>
 #include <mutex>
 #include <sstream>
 
@@ -75,7 +76,7 @@ static void *updServerThread(void *args)
 			std::stringstream stream;
 			stream << "update "
 				   << WaterLevelSensor_getVoltage1Reading(notifier) << " "
-				   << heatSampler->getMeanTemperature() << " "
+				   << heatSampler->getMeanTemperature() << " \n"
 				   << getAlerts();
 
 			char messageTx[MSG_MAX_LEN];
