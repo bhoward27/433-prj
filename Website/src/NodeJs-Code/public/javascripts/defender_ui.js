@@ -78,7 +78,12 @@ function sendCommandViaUDP(message) {
 		var resultSplitSpace = result.split(' ');
 		$('#water-level').text("~"+ resultSplitSpace[1] + " cm");
 		$('#temperature').text(resultSplitSpace[2] + " °C");
-		$('#alarm-level').text(resultSplitSpace[3]);
+		console.log(resultSplitSpace[3]);
+		if(resultSplitSpace[3] < 0.01) {
+			$('#alarm-level').text("0");
+		} else {
+			$('#alarm-level').text(resultSplitSpace[3]);
+		}
 	});
 
 	socket.on('alarmReply', function(result) {
