@@ -13,7 +13,7 @@ Webcam::Webcam(ShutdownManager *manager)
 
 void Webcam::run()
 {
-    webcam();
+    webcam(shutdownManager);
     if (shutdownManager->isShutdownRequested()) {
         printf("Shutdown requested, stopping webcam.\n");
         stopLoop();

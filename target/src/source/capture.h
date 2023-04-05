@@ -1,4 +1,5 @@
 // Header file for streaming the webcam
+#include "shutdown_manager.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -30,7 +31,7 @@ void process_image(const void *p, int size);
 int read_frame(void);
 
 // Main loop for capturing and streaming
-void mainloop(void);
+void mainloop(ShutdownManager *manager);
 
 // Stop capturing
 void stop_capturing(void);
@@ -63,7 +64,7 @@ void open_device(void);
 void stopLoop();
 
 // Main function
-int webcam();
+int webcam(ShutdownManager *manager);
 
 #endif
 

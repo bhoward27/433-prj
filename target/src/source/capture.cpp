@@ -202,7 +202,7 @@ int read_frame(void)
     return 1;
 }
 
-void mainloop(void)
+void mainloop(ShutdownManager *manager)
 {
     unsigned int count;
     unsigned int loopIsInfinite = 0;
@@ -212,7 +212,8 @@ void mainloop(void)
 
     while ((count-- > 0) || loopIsInfinite) {
         if (stop) break;
-        while (!stop) {
+        if(manager->isShutdownRequested()) break;
+        while (!manager->isShutdownRequested()) {
             fd_set fds;
             struct timeval tv;
             int r;
@@ -593,7 +594,7 @@ void open_device(void)
 
 void stopLoop() { stop = 1; }
 
-int webcam()
+int webcam(ShutdownManager *manager)
 {
     printf("Starting streaming\n");
     openConnectionT();
@@ -605,7 +606,7 @@ int webcam()
     open_device();
     init_device();
     start_capturing();
-    mainloop();
+    mainloop(manager);
     stop_capturing();
     uninit_device();
     close_device();
