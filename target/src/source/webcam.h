@@ -6,7 +6,8 @@
 
 class Webcam {
     private:
-        std::thread thread;
+        std::thread starterThread;
+        std::thread webcamThread;
         // Run the webcam
         void run ();
         ShutdownManager *shutdownManager = nullptr;
