@@ -42,6 +42,14 @@ $(document).ready(function() {
 	socket.on('stopPanning', function(result) {
 		alert("You have gone the maximum distance left or right");
 	});
+
+	socket.on('addAlert', function(result) {
+		var newDiv = $('<code></code>')
+			.text(result)
+			.wrapInner("<div></div>");
+		$('#messages').append(newDiv);
+		$('#messages').scrollTop($('#messages').prop('scrollHeight'));
+	});
 });
 
 $(document).ready(function () {
@@ -67,8 +75,22 @@ function sendCommandViaUDP(message) {
 	});
 	socket.on('updateReply', function(result) {
 		flag = false;
-		result = result.split(' ');
-		$('#water-level').text("~"+ result[1].toFixed(2) + " cm");
+		var resultSplitSpace = result.split(' ');
+		$('#water-level').text("~"+ resultSplitSpace[1] + " cm");
+
+		// result = result.split('\n');
+		
+		// if (result.length > 2) {
+		// 	console.log('hi');
+		// 	result.shift();
+		// 	for (message of result) {
+		// 		var newDiv = $('<code></code>')
+		// 			.text(message)
+		// 			.wrapInner("<div></div>");
+		// 		$('#messages').append(newDiv);
+		// 		$('#messages').scrollTop($('#messages').prop('scrollHeight'));
+		// 	}
+		// }
 	});
 
 	setTimeout(function () {
