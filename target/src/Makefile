@@ -133,6 +133,10 @@ mic:
 	sudo cp startMic.sh $(OUT_DIR)/startMic.sh
 	sudo cp stopMic.sh $(OUT_DIR)/stopMic.sh
 
+systemd: mic
+	sudo cp app.service $(OUT_DIR)/app.service
+	sudo cp systemd.sh $(OUT_DIR)/systemd.sh
+
 # Remove compiled object files
 .PHONY: clean
 clean:
