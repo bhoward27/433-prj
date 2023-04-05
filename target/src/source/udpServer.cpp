@@ -122,7 +122,6 @@ static void *updServerThread(void *args)
 		else if (strncmp(messageRx, "panRight", strlen("panRight")) == 0) {
 			// Insert panning right code here
 			// Send message "stop panning" if the user has gone over the min or max pan
-			moveRight();
 			if (moveRight()) {
 				char str[1024];
 				sprintf(str, "panning right");
