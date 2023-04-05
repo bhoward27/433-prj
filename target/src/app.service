@@ -1,0 +1,11 @@
+[Unit]
+Description=Home Defense System
+
+[Service]
+Type=oneshot
+ExecStart=/home/debian/myApps/internetToTarget.sh
+ExecStart=/home/debian/myApps/startMic.sh
+ExecStart=/home/debian/myApps/./app
+
+[Install]
+WantedBy=multi-user.target
