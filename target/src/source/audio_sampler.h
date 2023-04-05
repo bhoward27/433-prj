@@ -18,8 +18,8 @@
 #define AUDIO_READ_BUFFER_SIZE 100
 #define AUDIO_BUFFER_SLEEP 12
 
-#define ALARM_AVERAGE_PREVIOUS 0.80
-#define ALARM_AVERAGE_NEW 0.20
+#define ALARM_AVERAGE_PREVIOUS 0.8
+#define ALARM_AVERAGE_NEW 0.2
 
 class AudioSampler {
     private:
@@ -36,7 +36,7 @@ class AudioSampler {
         void updateAverage(float newSample);
 
     public:
-        static constexpr float requiredCertainty = 0.99;
+        static constexpr float requiredCertainty = 0.3;
         /**
          * Start a thread that samples the microphone. The thread also
          * runs the samples through a fire alarm ML inference model.

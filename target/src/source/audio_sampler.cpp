@@ -60,7 +60,7 @@ void AudioSampler::audioClassifier() {
                << std::fixed << std::setprecision(3) << alarmValue * 100 << "% certainty!";
         notifier->raiseEvent(Event::fireAlarmDetected, stream.str());
     }
-    else if (alarmValue <= requiredCertainty - 0.10) {
+    else if (alarmValue <= requiredCertainty - 0.25) {
         std::stringstream stream;
         stream << "The chance that a fire alarm is going off has lowered to only "
                << std::fixed << std::setprecision(3) << alarmValue * 100 << "%.";
@@ -111,10 +111,11 @@ void AudioSampler::run()
                 adc_lock.lock();
                 writeToFile(BUFFER_PATH, "1");
             }
-            sound[count++] = buffer[i] * 2;
+            sound[count++] = buffer[i] * 1.5;
         }
         sleepForDoubleMs(AUDIO_BUFFER_SLEEP);
     }
+    adc_lock.unlock();
 }
 
 float AudioSampler::getAlarmValue()
