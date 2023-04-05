@@ -8,16 +8,18 @@
 Webcam::Webcam(ShutdownManager *manager)
 {
     this->shutdownManager = manager;
-    thread = std::thread([this] { run(); });
+    starterThread = std::thread([this] { run(); });
 }
 
 void Webcam::run()
 {
-    webcam();
-    if (shutdownManager->isShutdownRequested()) {
-        printf("Shutdown requested, stopping webcam.\n");
-        stopLoop();
-    }
+    webcamThread = std::thread([this] { webcam(); });
+    while (!shutdownManager->isShutdownRequested());
+    printf("Shutdown requested, stopping webcam.\n");
+    stopLoop();
 }
 
-void Webcam::waitForShutdown() { thread.join(); }
+void Webcam::waitForShutdown() {
+    webcamThread.join();
+    starterThread.join();
+}
