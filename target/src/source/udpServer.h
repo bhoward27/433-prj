@@ -11,9 +11,13 @@
 #include "shutdown_manager.h"
 #include "heat_sampler.h"
 #include "notifier.h"
+#include "audio_sampler.h"
 
 // Initializes the udpServer and allows it to take commands
-void UdpServer_initialize(ShutdownManager* shutdownManagerArg, HeatSampler* heatSamplerArg, Notifier* notifierArg);
+void UdpServer_initialize(ShutdownManager* shutdownManagerArg,
+						  HeatSampler* heatSamplerArg,
+						  Notifier* notifierArg,
+						  AudioSampler* audioSamplerArg);
 
 // Cleans up and closes the udpServer
 void UdpServer_cleanup(void);

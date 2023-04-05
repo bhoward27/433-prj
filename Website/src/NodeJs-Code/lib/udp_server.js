@@ -81,6 +81,13 @@ function handleCommand(socket) {
 			// Learned how to compare part of string from this link: https://stackoverflow.com/questions/13833944/compare-part-of-string-in-javascript
 			if (reply.includes("update")) {
 				socket.emit('updateReply', reply);
+				reply = reply.split('\n');
+				if (reply.length > 2) {
+					reply.shift();
+					for (message of reply) {
+						socket.emit('addAlert', message);
+					}
+				}
 			} 
 			else if (reply.includes("stop panning")) {
 				socket.emit('stopPanning');
