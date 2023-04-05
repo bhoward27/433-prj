@@ -77,20 +77,7 @@ function sendCommandViaUDP(message) {
 		flag = false;
 		var resultSplitSpace = result.split(' ');
 		$('#water-level').text("~"+ resultSplitSpace[1] + " cm");
-
-		// result = result.split('\n');
-		
-		// if (result.length > 2) {
-		// 	console.log('hi');
-		// 	result.shift();
-		// 	for (message of result) {
-		// 		var newDiv = $('<code></code>')
-		// 			.text(message)
-		// 			.wrapInner("<div></div>");
-		// 		$('#messages').append(newDiv);
-		// 		$('#messages').scrollTop($('#messages').prop('scrollHeight'));
-		// 	}
-		// }
+		$('#temperature').text(resultSplitSpace[2] + " °C");
 	});
 
 	setTimeout(function () {
