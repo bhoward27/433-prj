@@ -78,6 +78,7 @@ function sendCommandViaUDP(message) {
 		var resultSplitSpace = result.split(' ');
 		$('#water-level').text("~"+ resultSplitSpace[1] + " cm");
 		$('#temperature').text(resultSplitSpace[2] + " °C");
+		$('#alarm-level').text(resultSplitSpace[3]);
 	});
 
 	setTimeout(function () {
